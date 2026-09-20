@@ -1,19 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppContext } from '../store/AppContext';
 import { CravingContext, Mood } from '../types';
 import { CheckCircle2, Wind, Search, Trophy, ShoppingCart } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Milestone } from '../lib/db';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export function LogPage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
   const { addCraving } = useAppContext();
+  const { t, language } = useLanguage();
   
   const [intensity, setIntensity] = useState(5);
   const [context, setContext] = useState<CravingContext | null>(null);
   const [mood, setMood] = useState<Mood | null>(null);
   const [resisted, setResisted] = useState(true);
   const [inhalerUsed, setInhalerUsed] = useState(true);
-  const [showMilestone, setShowMilestone] = useState<Milestone | null>(null);
+  const [milestoneQueue, setMilestoneQueue] = useState<Milestone[]>([]);
+  const goHomeAfterMilestones = useRef(false);
+
+  // Show unlocked milestones one at a time, then return to the home tab.
+  useEffect(() => {
+    if (milestoneQueue.length === 0) {
+      if (goHomeAfterMilestones.current) {
+        goHomeAfterMilestones.current = false;
+        setActiveTab('home');
+      }
+      return;
+    }
+    const timer = setTimeout(() => setMilestoneQueue(q => q.slice(1)), 4000); // 4 seconds animation delay
+    return () => clearTimeout(timer);
+  }, [milestoneQueue]);
 
   const contexts: {id: CravingContext, label: string}[] = [
     {id: 'waking_up', label: 'Waking Up'},
@@ -40,7 +56,7 @@ export function LogPage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
     const timestamp = new Date().toISOString();
 
     try {
-      const milestone = await addCraving({
+      const milestones = await addCraving({
         timestamp,
         intensity,
         trigger_category: context,
@@ -49,12 +65,9 @@ export function LogPage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
         inhaler_used: inhalerUsed,
       });
 
-      if (milestone) {
-        setShowMilestone(milestone);
-        setTimeout(() => {
-          setShowMilestone(null);
-          setActiveTab('home');
-        }, 4000); // 4 seconds animation delay
+      if (milestones.length > 0) {
+        goHomeAfterMilestones.current = true;
+        setMilestoneQueue(milestones);
       } else {
         setActiveTab('home');
       }
@@ -64,6 +77,8 @@ export function LogPage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
       setActiveTab('home');
     }
   };
+
+  const showMilestone = milestoneQueue[0];
 
   if (showMilestone) {
      return (
@@ -153,8 +168,8 @@ export function LogPage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
         </label>
         <label className="flex items-center justify-between py-3 cursor-pointer">
            <div>
-             <span className="block font-bold text-gray-800 text-sm">Used Breathe AI Inhaler by Patchouni?</span>
-             <span className="text-xs text-gray-500 font-medium">Auto-recorded if connected</span>
+             <span className="block font-bold text-gray-800 text-sm">{t.logPage.usedInhalerLabel}</span>
+             <span className="text-xs text-gray-500 font-medium">{t.logPage.inhalerAuto}</span>
            </div>
            <input 
              type="checkbox" 
@@ -168,8 +183,8 @@ export function LogPage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
       {!inhalerUsed && (
          <button onClick={() => setActiveTab('shop')} className="w-full bg-gradient-to-r from-brand to-brand-light text-white p-3 rounded-xl flex items-center justify-between shadow-[0_4px_0_var(--color-brand-dark)] active:translate-y-1 active:shadow-none transition-all">
             <div className="text-left">
-              <p className="text-xs font-bold tracking-wider text-white/80">Need physical relief?</p>
-              <p className="text-sm font-bold">Get a Breathe AI Smart Inhaler by Patchouni</p>
+              <p className="text-xs font-bold tracking-wider text-white/80">{t.logPage.needRelief}</p>
+              <p className="text-sm font-bold">{t.logPage.getInhaler}</p>
             </div>
             <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
                <ShoppingCart className="w-4 h-4 text-white" />

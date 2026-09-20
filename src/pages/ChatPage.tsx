@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useAppContext } from '../store/AppContext';
-import { GoogleGenAI, Type } from '@google/genai';
 import { Send, Bot, Loader2, Target, CheckCircle2, ThumbsUp, ThumbsDown, Zap, Lightbulb } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { AiConversation, Mission, CoachInsightItem } from '../lib/db';
 import ReactMarkdown from 'react-markdown';
 import { differenceInDays, subDays } from 'date-fns';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export function ChatPage({ setActiveTab }: { setActiveTab?: (tab: any) => void }) {
   const { state, addChatMessage, updateProfile, addMission, updateMission, markInsightRead } = useAppContext();
+  const { t } = useLanguage();
   const [activeTab, setLocalActiveTab] = useState<'chat' | 'missions'>('chat');
 
   return (
@@ -20,19 +21,19 @@ export function ChatPage({ setActiveTab }: { setActiveTab?: (tab: any) => void }
             <div className="absolute top-0 right-0 w-3 h-3 bg-brand rounded-full border-2 border-white"></div>
           </div>
           <div>
-            <h1 className="font-bold text-gray-800 leading-tight">Coach</h1>
-            <p className="text-xs text-brand font-bold">Online</p>
+            <h1 className="font-bold text-gray-800 leading-tight">{t.chat.coachTitle}</h1>
+            <p className="text-xs text-brand font-bold">{t.chat.online}</p>
           </div>
         </div>
         <div className="flex bg-gray-100 p-1 rounded-full">
            <button 
               onClick={() => setLocalActiveTab('chat')}
-              className={cn("px-4 py-1.5 text-xs font-bold rounded-full transition-all", activeTab === 'chat' ? "bg-white text-gray-900 shadow-sm" : "text-gray-500")}
-           >Chat</button>
+              className={cn("px-4 py-1.5 text-xs font-bold rounded-full transition-all cursor-pointer", activeTab === 'chat' ? "bg-white text-gray-900 shadow-sm" : "text-gray-500")}
+           >{t.chat.chatTab}</button>
            <button 
               onClick={() => setLocalActiveTab('missions')}
-              className={cn("px-4 py-1.5 text-xs font-bold rounded-full transition-all", activeTab === 'missions' ? "bg-white text-gray-900 shadow-sm" : "text-gray-500")}
-           >Tracker</button>
+              className={cn("px-4 py-1.5 text-xs font-bold rounded-full transition-all cursor-pointer", activeTab === 'missions' ? "bg-white text-gray-900 shadow-sm" : "text-gray-500")}
+           >{t.chat.trackerTab}</button>
         </div>
       </header>
 
@@ -43,6 +44,7 @@ export function ChatPage({ setActiveTab }: { setActiveTab?: (tab: any) => void }
 
 function ChatInterface({ setActiveTab }: { setActiveTab?: (tab: any) => void }) {
    const { state, addChatMessage, addCraving, addInhalerLog, addMission } = useAppContext();
+   const { t, language } = useLanguage();
    const [input, setInput] = useState('');
    const [isTyping, setIsTyping] = useState(false);
    const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -65,19 +67,19 @@ function ChatInterface({ setActiveTab }: { setActiveTab?: (tab: any) => void }) 
       let actions = [];
       if (lastCravingMins < 60) {
          if (lastCraving?.outcome === 'smoked') {
-            actions = ["It's okay, let's talk", "Help me start over", "Why did this happen?"];
+            actions = [t.chat.quickSmoked1, t.chat.quickSmoked2, t.chat.quickSmoked3];
          } else if (lastCraving?.intensity >= 7) {
-            actions = ["Help me get through this", "I want to vent", `Show me ${state.profile?.quitMethod || 'relaxation'} techniques`];
+            actions = [t.chat.quickIntense1, t.chat.quickIntense2, language === 'id' ? `Tunjukkan teknik relaksasi` : `Show me relaxation techniques`];
          } else {
-            actions = ["The craving faded on its own", "Let's talk about the trigger"];
+            actions = [t.chat.quickFaded, t.chat.quickTrigger];
          }
       } else if (currentDay > 0 && currentDay % 7 === 0) {
-         actions = ["Celebrate with you", "Set the next goal", "Check what has changed in my body"];
+         actions = [t.chat.quickCelebrate, t.chat.quickNextGoal, t.chat.quickBodyChange];
       } else {
-         actions = ["Any tips for today?", "I have something on my mind", "Review my progress"];
+         actions = [t.chat.quickTips, t.chat.quickMind, t.chat.quickProgress];
       }
       return actions;
-   }, [lastCravingMins, lastCraving, currentDay, state.profile]);
+   }, [lastCravingMins, lastCraving, currentDay, state.profile, language, t]);
 
    const emotionRegex = {
       distressed: /(can't|give up|tired|dizzy|stressed|heavy|impossible)/i,
@@ -152,7 +154,8 @@ function ChatInterface({ setActiveTab }: { setActiveTab?: (tab: any) => void }) 
            topMood,
            bhiProxy,
            emotion,
-           quitMethod: state.profile?.quitMethod || 'None'
+           quitMethod: state.profile?.quitMethod || 'None',
+           language: language || 'id'
         };
 
         const res = await fetch("/api/chat", {
@@ -252,7 +255,7 @@ function ChatInterface({ setActiveTab }: { setActiveTab?: (tab: any) => void }) 
          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50 pb-32">
             {state.messages.length === 0 && (
                <div className="text-center text-gray-500 my-8 px-4 text-sm font-medium">
-                  Hi! I'm your AI Coach. I'm here 24/7 if you need to talk about a craving, want some motivation, or just need a distraction.
+                  {t.chat.emptyGreeting}
                </div>
             )}
             
@@ -302,7 +305,7 @@ function ChatInterface({ setActiveTab }: { setActiveTab?: (tab: any) => void }) 
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSend()}
-                  placeholder="Ceritakan kondisimu..."
+                  placeholder={t.chat.placeholder}
                   className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-5 py-3.5 text-sm font-medium focus:outline-none focus:border-gray-800 focus:ring-1 focus:ring-gray-800 transition-colors"
                />
                <button 
@@ -320,6 +323,7 @@ function ChatInterface({ setActiveTab }: { setActiveTab?: (tab: any) => void }) 
 
 function TrackerInterface() {
    const { state, updateMission, markInsightRead } = useAppContext();
+   const { t } = useLanguage();
    const activeMission = state.missions.find(m => m.status === 'active');
    const completedMissions = state.missions.filter(m => m.status === 'completed');
    
@@ -327,7 +331,7 @@ function TrackerInterface() {
       <div className="flex-1 overflow-y-auto bg-gray-50/50 p-3 space-y-8 pb-32">
          {/* INSIGHT FEED */}
          <section>
-            <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2"><Lightbulb className="w-4 h-4 text-brand"/> Coach Insight Feed</h3>
+            <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2"><Lightbulb className="w-4 h-4 text-brand"/> {t.chat.insightFeed}</h3>
             <div className="space-y-3">
                {state.coachInsights.length > 0 ? state.coachInsights.map(insight => (
                   <div key={insight.id} className={`card-duo p-3 transition-all ${insight.isRead ? 'opacity-70' : 'border-brand-light'}`}>
@@ -335,14 +339,14 @@ function TrackerInterface() {
                      <div className="flex justify-between items-center border-t border-gray-100 pt-3">
                         <span className="text-[10px] font-bold text-gray-400">{new Date(insight.timestamp).toLocaleDateString()}</span>
                         <div className="flex gap-2">
-                           <button className="p-1.5 rounded-full hover:bg-gray-100"><ThumbsUp className="w-4 h-4 text-gray-400"/></button>
-                           <button className="p-1.5 rounded-full hover:bg-gray-100"><ThumbsDown className="w-4 h-4 text-gray-400"/></button>
+                           <button className="p-1.5 rounded-full hover:bg-gray-100 cursor-pointer"><ThumbsUp className="w-4 h-4 text-gray-400"/></button>
+                           <button className="p-1.5 rounded-full hover:bg-gray-100 cursor-pointer"><ThumbsDown className="w-4 h-4 text-gray-400"/></button>
                         </div>
                      </div>
                   </div>
                )) : (
                   <div className="card-duo bg-brand-surface border-brand/20 p-3 text-center">
-                     <p className="text-sm font-medium text-gray-600 leading-relaxed py-4">Belum ada insight. Chat dengan AI Coach secara reguler untuk mendapatkan insight personal!</p>
+                     <p className="text-sm font-medium text-gray-600 leading-relaxed py-4">{t.chat.noInsight}</p>
                   </div>
                )}
             </div>
@@ -350,13 +354,13 @@ function TrackerInterface() {
 
          {/* MISSION BOARD */}
          <section>
-            <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2"><Target className="w-4 h-4 text-brand"/> Personal Mission</h3>
+            <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2"><Target className="w-4 h-4 text-brand"/> {t.chat.personalMission}</h3>
             {activeMission ? (
                <div className="bg-gray-900 border border-gray-800 text-white rounded-3xl p-4 relative overflow-hidden shadow-xl">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-white/10 to-transparent rounded-bl-[100px]"></div>
                   <div className="flex justify-between items-center mb-4 relative z-10">
-                     <span className="text-[10px] tracking-widest font-bold bg-white/20 px-2 py-1 rounded-sm text-white">Active</span>
-                     <span className="text-[10px] font-bold text-gray-400">{activeMission.currentCount} / {activeMission.targetCount} DONE</span>
+                     <span className="text-[10px] tracking-widest font-bold bg-white/20 px-2 py-1 rounded-sm text-white">{t.chat.activeStatus}</span>
+                     <span className="text-[10px] font-bold text-gray-400">{activeMission.currentCount} / {activeMission.targetCount} {t.chat.doneStatus}</span>
                   </div>
                   
                   <h4 className="text-xl font-bold leading-tight mb-2 relative z-10">{activeMission.title}</h4>
@@ -368,24 +372,24 @@ function TrackerInterface() {
                      </div>
                      <button 
                         onClick={() => updateMission(activeMission.id, { currentCount: activeMission.currentCount + 1 })}
-                        className="w-full bg-white text-gray-900 font-bold py-3 mt-4 rounded-xl text-sm hover:bg-gray-100 flex justify-center items-center gap-2"
+                        className="w-full bg-white text-gray-900 font-bold py-3 mt-4 rounded-xl text-sm hover:bg-gray-100 flex justify-center items-center gap-2 cursor-pointer"
                      >
-                        <CheckCircle2 className="w-4 h-4" /> Log Progress
+                        <CheckCircle2 className="w-4 h-4" /> {t.chat.logProgress}
                      </button>
                   </div>
                </div>
             ) : (
                <div className="bg-gray-100 border border-gray-200 rounded-3xl p-6 text-center shadow-sm">
-                  <h4 className="font-bold text-gray-800 mb-2">Tidak ada misi aktif</h4>
+                  <h4 className="font-bold text-gray-800 mb-2">{t.chat.noActiveMission}</h4>
                   <p className="text-sm font-medium text-gray-500">
-                     Chat with your AI Coach to get personal challenges and missions tailored to your progress.
+                     {t.chat.noActiveMissionDesc}
                   </p>
                </div>
             )}
 
             {completedMissions.length > 0 && (
                <div className="mt-8">
-                  <h4 className="text-xs font-bold text-gray-400 tracking-widest mb-3">Past Missions</h4>
+                  <h4 className="text-xs font-bold text-gray-400 tracking-widest mb-3">{t.chat.pastMissions}</h4>
                   <div className="space-y-3">
                      {completedMissions.map((m, i) => (
                         <div key={i} className="card-duo p-4 bg-white border-gray-200">
@@ -395,7 +399,7 @@ function TrackerInterface() {
                               </div>
                               <div>
                                  <h5 className="font-bold text-sm text-gray-800">{m.title}</h5>
-                                 <p className="text-[10px] text-gray-500 font-bold tracking-widest mt-0.5">{m.targetCount}/{m.targetCount} Completed</p>
+                                 <p className="text-[10px] text-gray-500 font-bold tracking-widest mt-0.5">{m.targetCount}/{m.targetCount} {t.chat.completedSuffix}</p>
                               </div>
                            </div>
                            {m.reflection && <p className="text-xs text-gray-600 italic font-medium mt-3 bg-gray-50 p-2 rounded-lg">"{m.reflection}"</p>}

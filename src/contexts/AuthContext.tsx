@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 interface AuthContextType {
   session: any | null;
@@ -18,13 +19,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
-    // Check if user previously selected guest mode in this session
-    const guestState = localStorage.getItem('isGuest') === 'true';
-    if (guestState) setIsGuest(true);
+    // Without Supabase credentials the app runs fully offline as a guest.
+    if (!supabase) {
+      setIsGuest(true);
+      setLoading(false);
+      return;
+    }
 
-    // Default to guest since we are fully offline
-    setIsGuest(true);
-    setLoading(false);
+    // Restore a previously chosen guest mode.
+    if (localStorage.getItem('isGuest') === 'true') setIsGuest(true);
+
+    let active = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!active) return;
+      setSession(data.session);
+      setUser(data.session?.user ?? null);
+      // A real session always wins over a stale guest flag.
+      if (data.session) setIsGuest(false);
+      setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession);
+      setUser(nextSession?.user ?? null);
+      if (nextSession) setIsGuest(false);
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const continueAsGuest = () => {
@@ -33,6 +58,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signOut = async () => {
+    if (supabase) await supabase.auth.signOut();
+    setSession(null);
+    setUser(null);
     setIsGuest(false);
     localStorage.removeItem('isGuest');
   };

@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useAppContext } from '../store/AppContext';
 import { Flame, Wind, Activity, BrainCircuit, Heart, FileText, ChevronRight, Zap } from 'lucide-react';
 import { differenceInDays, differenceInHours, isToday, subDays } from 'date-fns';
-import { GoogleGenAI } from '@google/genai';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
   const { state, addCoachInsight } = useAppContext();
+  const { language, t } = useLanguage();
   const profile = state.profile;
   const [insightLoading, setInsightLoading] = useState(false);
   const [insightError, setInsightError] = useState(false);
@@ -59,7 +60,7 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
         const res = await fetch("/api/insight", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ statsContext })
+          body: JSON.stringify({ statsContext, language: language || 'id' })
         });
         const data = await res.json();
 
@@ -84,7 +85,7 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
     // Slight delay so we don't block render with heavy data process
     const to = setTimeout(generateDailyInsight, 2000);
     return () => clearTimeout(to);
-  }, [profile, state.cravings, state.coachInsights, addCoachInsight, process.env.GEMINI_API_KEY]);
+  }, [profile, state.cravings, state.coachInsights, addCoachInsight]);
 
   if (!profile) return null;
 
@@ -153,21 +154,20 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
   const xpNeededForLevel = xpForNextLevel - xpForCurrentLevel;
   const xpProgressPct = Math.max(0, Math.min(100, (xpIntoLevel / xpNeededForLevel) * 100));
   
-  const titleMap: Record<number, string> = {
-     1: 'Novice Quitter',
-     2: 'Apprentice',
-     3: 'Defender',
-     4: 'Warrior',
-     5: 'Champion',
-     6: 'Master Quitter',
-     7: 'Grandmaster'
-  };
-  const userTitle = titleMap[currentLevel] || `Level ${currentLevel} Guardian`;
+  const userTitle = (t.home.userTitles as Record<number, string>)[currentLevel] || (language === 'id' ? `Penjaga Level ${currentLevel}` : `Level ${currentLevel} Guardian`);
 
   // Find latest dashboard insight
   const latestInsight = [...state.coachInsights]
      .filter(c => c.type === 'daily_dashboard')
      .sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0];
+
+  const depLevelLabel = profile.dependancyLevel && (t.home.levels as any)[profile.dependancyLevel]
+    ? (t.home.levels as any)[profile.dependancyLevel]
+    : profile.dependancyLevel;
+
+  const methodTitle = profile.quitMethod && (t.home.methodNames as any)[profile.quitMethod] 
+    ? (t.home.methodNames as any)[profile.quitMethod] 
+    : t.home.methodNames.cbt;
 
   return (
     <div className="p-3 space-y-6 pt-12 pb-24">
@@ -176,11 +176,11 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
         <div className="flex items-center justify-between">
            <div>
               <h1 className="text-3xl font-bold text-gray-800 tracking-tight flex items-center gap-2">
-                 Your Journey
+                 {t.home.yourJourney}
               </h1>
            </div>
            <div className="bg-brand-surface border-2 border-brand text-brand font-bold px-3 py-1 rounded-xl shadow-[0_4px_0_var(--color-brand-dark)] flex items-center gap-1 capitalize">
-              {profile.dependancyLevel}
+              {depLevelLabel}
            </div>
         </div>
         <div className="card-duo bg-white relative overflow-hidden">
@@ -219,10 +219,12 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
          <section onClick={() => setActiveTab('inhaler')} className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-3 shadow-2xl shadow-gray-900/20 mb-6 cursor-pointer relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-brand/20 blur-3xl rounded-full group-hover:bg-brand/30 transition-colors"></div>
             <div className="flex items-center gap-2 text-brand-300 font-bold text-[10px] tracking-widest mb-2">
-               <BrainCircuit className="w-3 h-3" /> Today's Recommendation
+               <BrainCircuit className="w-3 h-3" /> {t.home.todayRec}
             </div>
             <p className="text-white font-bold text-sm leading-snug">
-               For <span className="text-brand-400">"{recommendedVariant.context}"</span> cravings, is your <span className="text-brand-400">{recommendedVariant.variant}</span> ready?
+               {language === 'id' 
+                 ? <>Untuk dorongan saat <span className="text-brand-400">"{recommendedVariant.context}"</span>, apakah pod <span className="text-brand-400">{recommendedVariant.variant}</span> Anda siap?</>
+                 : <>For <span className="text-brand-400">"{recommendedVariant.context}"</span> cravings, is your <span className="text-brand-400">{recommendedVariant.variant}</span> ready?</>}
             </p>
          </section>
       )}
@@ -238,20 +240,16 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
            </div>
            <div>
              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold text-gray-500 bg-gray-100 mb-1">
-               Your Method
+               {t.home.yourMethod}
              </div>
              <h3 className="font-extrabold text-gray-900 text-lg leading-tight">
-               {profile.quitMethod === 'cbt' ? 'Cognitive Behavioral' : 
-                profile.quitMethod === 'act' ? 'Acceptance & Commitment' : 
-                profile.quitMethod === 'mindfulness' ? 'Mindfulness' : 
-                profile.quitMethod === 'mi' ? 'Motivational Interviewing' : 
-                profile.quitMethod === 'habit' ? 'Habit Replacement' : 'Cognitive Behavioral'}
+               {methodTitle}
              </h3>
            </div>
            <ChevronRight className="w-5 h-5 text-gray-300 ml-auto group-hover:text-brand transition-colors" />
         </div>
         <p className="text-sm font-medium text-gray-500 mt-2">
-           Tap to view your personalized dashboard and daily plan.
+           {t.home.tapToView}
         </p>
       </section>
 
@@ -260,14 +258,14 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
         <div className="absolute top-0 right-0 p-4 opacity-10">
           <Flame className="w-32 h-32" />
         </div>
-        <h3 className="text-white/80 text-sm font-bold tracking-wider mb-3">Smoke-Free Streak</h3>
+        <h3 className="text-white/80 text-sm font-bold tracking-wider mb-3">{t.home.smokeFreeStreak}</h3>
         <div className="flex items-baseline gap-2 mb-2">
           <span className="text-5xl font-bold">{streakDays}</span>
-          <span className="text-white/80 font-bold">days</span>
+          <span className="text-white/80 font-bold">{t.home.days}</span>
           <span className="text-5xl font-bold ml-2">{streakHours}</span>
-          <span className="text-white/80 font-bold">hrs</span>
+          <span className="text-white/80 font-bold">{t.home.hrs}</span>
         </div>
-        <p className="text-white/80 text-sm font-bold mt-4">Uang Terselamatkan: <span className="text-white">Rp {(streakDays * profile.cigarettesPerDay * 2500).toLocaleString('id-ID')}</span></p>
+        <p className="text-white/80 text-sm font-bold mt-4">{t.home.moneySaved} <span className="text-white">Rp {(streakDays * profile.cigarettesPerDay * 2500).toLocaleString('id-ID')}</span></p>
       </section>
 
       {/* Today's Stats */}
@@ -276,7 +274,7 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
           <div className="icon-solid w-10 h-10 mb-3">
             <Activity className="w-5 h-5 text-white" />
           </div>
-          <h4 className="text-gray-500 text-sm font-bold mb-1">Cravings Today</h4>
+          <h4 className="text-gray-500 text-sm font-bold mb-1">{t.home.cravingsToday}</h4>
           <span className="text-3xl font-bold text-gray-800 tracking-tight">{cravingsToday.length}</span>
         </div>
         
@@ -284,8 +282,8 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
           <div className="icon-solid w-10 h-10 mb-3">
              <Wind className="w-5 h-5 text-white" />
           </div>
-          <h4 className="text-gray-500 text-xs font-bold mb-1 tracking-tight">Inhaler Dipakai</h4>
-          <span className="text-3xl font-bold text-gray-800 tracking-tight">{inhalerUsesThisWeek} <span className="text-sm font-medium text-gray-500 lowercase">times this week</span></span>
+          <h4 className="text-gray-500 text-xs font-bold mb-1 tracking-tight">{t.home.inhalerUsed}</h4>
+          <span className="text-3xl font-bold text-gray-800 tracking-tight">{inhalerUsesThisWeek} <span className="text-sm font-medium text-gray-500 lowercase">{t.home.timesThisWeek}</span></span>
         </div>
       </section>
 
@@ -295,7 +293,7 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
           <div className="icon-solid w-10 h-10">
              <BrainCircuit className="w-5 h-5 text-white" />
           </div>
-          <h3 className="font-bold text-gray-800">Daily AI Insight</h3>
+          <h3 className="font-bold text-gray-800">{t.home.dailyAiInsight}</h3>
         </div>
         
         {insightLoading ? (
@@ -307,8 +305,8 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
             <div className="text-gray-600 text-sm leading-relaxed font-medium">
               <p>
                 {streakDays > 0 
-                  ? `You are on a solid ${streakDays} days streak! Your resistance is building up steadily. Keep your PATCHWORK close just in case.`
-                  : "Every small step counts. Log your cravings today so we can identify your strongest triggers and tackle them."}
+                  ? (language === 'id' ? `Anda berada di streak konsisten ${streakDays} hari! Ketahanan Anda terus terbentuk. Pastikan inhaler Noconi selalu siap.` : `You are on a solid ${streakDays} days streak! Your resistance is building up steadily. Keep your inhaler close just in case.`)
+                  : (language === 'id' ? "Setiap langkah kecil sangat berarti. Catat dorongan rokok Anda hari ini agar kita bisa mengidentifikasi pemicu terkuat Anda." : "Every small step counts. Log your cravings today so we can identify your strongest triggers and tackle them.")}
               </p>
               <span className="block mt-2 text-[10px] text-gray-400 font-bold tracking-widest">
                 *(Local daily insight)*
@@ -316,38 +314,38 @@ export function HomePage({ setActiveTab }: { setActiveTab: (t: any) => void }) {
             </div>
         ) : (
             <p className="text-gray-600 text-sm leading-relaxed font-medium">
-              {latestInsight?.content || "You tend to have higher craving levels after waking up. Keep your inhaler close by tomorrow morning."}
+              {latestInsight?.content || t.home.fallbackInsight}
             </p>
         )}
       </section>
 
       {/* Quick Actions */}
       <section className="space-y-4 pb-8">
-        <h3 className="font-bold text-gray-800 px-1 mb-2">Quick Actions</h3>
+        <h3 className="font-bold text-gray-800 px-1 mb-2">{t.home.quickActions}</h3>
         <button 
           onClick={() => setActiveTab('log')}
-          className="w-full btn-outline justify-start py-4 group hover:border-brand-light transition-colors"
+          className="w-full btn-outline justify-start py-4 group hover:border-brand-light transition-colors cursor-pointer"
         >
           <div className="icon-solid w-11 h-11 mr-3 group-hover:scale-105 transition-transform duration-300">
              <Activity className="w-5 h-5 text-white" />
           </div>
           <div className="text-left flex-1 relative z-10">
-             <h4 className="font-bold text-gray-800">Log a Craving</h4>
-             <p className="text-xs text-gray-500 font-medium mt-0.5">Record intensity and trigger</p>
+             <h4 className="font-bold text-gray-800">{t.home.logCraving}</h4>
+             <p className="text-xs text-gray-500 font-medium mt-0.5">{t.home.logCravingSub}</p>
           </div>
           <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-brand transition-colors" />
         </button>
 
         <button 
           onClick={() => setActiveTab('chat')}
-          className="w-full btn-outline justify-start py-4 group hover:border-brand-light transition-colors"
+          className="w-full btn-outline justify-start py-4 group hover:border-brand-light transition-colors cursor-pointer"
         >
           <div className="icon-solid w-11 h-11 mr-3 group-hover:scale-105 transition-transform duration-300">
              <BrainCircuit className="w-5 h-5 text-white" />
           </div>
           <div className="text-left flex-1 relative z-10">
-             <h4 className="font-bold text-gray-800">Talk to AI Coach</h4>
-             <p className="text-xs text-gray-500 font-medium mt-0.5">Get real-time support</p>
+             <h4 className="font-bold text-gray-800">{t.home.talkToAi}</h4>
+             <p className="text-xs text-gray-500 font-medium mt-0.5">{t.home.talkToAiSub}</p>
           </div>
           <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-brand transition-colors" />
         </button>
