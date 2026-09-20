@@ -3,6 +3,7 @@ import { ArrowLeft, Calculator, Waves, Wind, Play, HelpCircle, Activity, Chevron
 import { useAppContext } from '../store/AppContext';
 import { cn } from '../lib/utils';
 import { differenceInDays, differenceInYears } from 'date-fns';
+import { useLanguage } from '../contexts/LanguageContext';
 
 type SubPage = 'list' | 'calculator' | 'surfer' | 'lung_age';
 
@@ -20,6 +21,7 @@ export function ToolsPage({ setActiveTab }: { setActiveTab: (tab: any) => void }
 }
 
 function ToolsList({ setPage }: { setPage: (page: SubPage) => void }) {
+  const { t } = useLanguage();
   const tools = [
     {
       id: 'calculator',
@@ -46,8 +48,8 @@ function ToolsList({ setPage }: { setPage: (page: SubPage) => void }) {
 
   return (
     <div className="p-4 pt-12">
-      <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Tools & Games</h1>
-      <p className="text-gray-500 font-medium mb-8">Choose an interactive test to help you stay on track.</p>
+      <h1 className="text-3xl font-extrabold text-gray-900 mb-2">{t.tools.title}</h1>
+      <p className="text-gray-500 font-medium mb-8">{t.tools.subtitle}</p>
       
       <div className="flex flex-col gap-4">
         {tools.map(tool => (

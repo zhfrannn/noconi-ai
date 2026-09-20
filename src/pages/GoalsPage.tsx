@@ -1,14 +1,24 @@
 import { useAppContext } from '../store/AppContext';
 import { Target, Trophy, Award, TrendingDown, Clock, CheckCircle } from 'lucide-react';
 import { differenceInDays, differenceInWeeks } from 'date-fns';
+import { useLanguage } from '../contexts/LanguageContext';
 
-const HEALTH_TIMELINE = [
+const HEALTH_TIMELINE_EN = [
   { hours: 0.33, title: 'Heart rate drops' },
   { hours: 12, title: 'Carbon monoxide drops to normal' },
   { hours: 24, title: 'Heart attack risk begins to drop' },
   { hours: 72, title: 'Nicotine clears your body entirely' },
   { hours: 336, title: 'Lung function improves' }, // 2 weeks
   { hours: 8760, title: 'Heart attack risk halves' }, // 1 year
+];
+
+const HEALTH_TIMELINE_ID = [
+  { hours: 0.33, title: 'Detak jantung mulai menurun' },
+  { hours: 12, title: 'Kadar CO dalam darah kembali normal' },
+  { hours: 24, title: 'Risiko serangan jantung mulai berkurang' },
+  { hours: 72, title: 'Nikotin sepenuhnya keluar dari tubuh' },
+  { hours: 336, title: 'Fungsi paru-paru membaik' },
+  { hours: 8760, title: 'Risiko serangan jantung berkurang setengah' },
 ];
 
 const MILESTONES_CONFIG = [
@@ -20,6 +30,7 @@ const MILESTONES_CONFIG = [
 
 export function GoalsPage() {
   const { state } = useAppContext();
+  const { t, language } = useLanguage();
   const profile = state.profile;
   if (!profile) return null;
 
@@ -34,11 +45,13 @@ export function GoalsPage() {
 
   const resistedCount = state.cravings.filter(c => c.outcome === 'resisted').length;
 
+  const HEALTH_TIMELINE = language === 'id' ? HEALTH_TIMELINE_ID : HEALTH_TIMELINE_EN;
+
   return (
     <div className="p-3 space-y-6 pt-12 pb-24">
       <header>
-        <h1 className="text-2xl font-bold text-gray-800">Goals & Milestones</h1>
-        <p className="text-gray-500 font-medium text-sm mt-1">Your timeline to health.</p>
+        <h1 className="text-2xl font-bold text-gray-800">{t.goals.title}</h1>
+        <p className="text-gray-500 font-medium text-sm mt-1">{t.goals.subtitle}</p>
       </header>
 
       {/* Health Timeline */}
@@ -47,7 +60,7 @@ export function GoalsPage() {
           <div className="icon-solid w-8 h-8">
              <TrendingDown className="w-4 h-4 text-white" />
           </div>
-          <h3 className="font-bold text-gray-800">Health Recovery</h3>
+          <h3 className="font-bold text-gray-800">{t.goals.healthRecovery}</h3>
         </div>
         <div className="p-3 space-y-6">
           {HEALTH_TIMELINE.map(item => {
@@ -57,7 +70,9 @@ export function GoalsPage() {
                 <div className={`absolute w-4 h-4 rounded-full -left-[9px] top-0 border-[3px] border-white shadow-sm base-transition ${isComplete ? 'bg-brand' : 'bg-gray-200'}`}></div>
                 <h4 className={`font-bold text-sm ${isComplete ? 'text-gray-800' : 'text-gray-500'}`}>{item.title}</h4>
                 <p className={`text-xs mt-1 font-bold ${isComplete ? 'text-brand' : 'text-gray-400'}`}>
-                   {isComplete ? "Complete!" : `Requires ${item.hours >= 24 ? Math.round(item.hours/24) + ' days' : item.hours + ' hours'}`}
+                   {isComplete 
+                     ? t.goals.complete 
+                     : `${t.goals.requires} ${item.hours >= 24 ? Math.round(item.hours/24) + ' ' + t.goals.days : item.hours + ' ' + t.goals.hours}`}
                 </p>
               </div>
              )
@@ -67,10 +82,10 @@ export function GoalsPage() {
 
       {/* Badges / Milestones */}
       <section>
-        <h3 className="font-bold text-gray-800 mb-4 ml-1">Your Milestones</h3>
+        <h3 className="font-bold text-gray-800 mb-4 ml-1">{t.goals.yourMilestones}</h3>
         
         {/* Unlocked */}
-        <h4 className="text-[10px] font-bold text-gray-400 tracking-widest mb-3 ml-1">Unlocked</h4>
+        <h4 className="text-[10px] font-bold text-gray-400 tracking-widest mb-3 ml-1">{t.goals.unlocked}</h4>
         <div className="grid grid-cols-2 gap-4 mb-8">
            {state.milestones.length > 0 ? state.milestones.map(m => (
               <div key={m.id} className="card-duo text-center flex flex-col items-center p-4 bg-brand-surface border border-brand/20 shadow-sm">
@@ -78,24 +93,24 @@ export function GoalsPage() {
                    <Trophy className="w-6 h-6 text-brand" />
                  </div>
                  <h4 className="font-bold text-sm text-brand-dark">{m.title}</h4>
-                 <p className="text-[10px] text-brand font-bold mt-1.5 flex items-center gap-1 justify-center"><CheckCircle className="w-3 h-3"/> Achieved</p>
+                 <p className="text-[10px] text-brand font-bold mt-1.5 flex items-center gap-1 justify-center"><CheckCircle className="w-3 h-3"/> {t.goals.achieved}</p>
                </div>
            )) : (
              <div className="col-span-2 text-center text-sm font-bold text-gray-400 p-4 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">
-                No milestones yet, keep going!
+                {t.goals.noMilestones}
              </div>
            )}
         </div>
 
         {/* Upcoming Action Milestones */}
-        <h4 className="text-[10px] font-bold text-gray-400 tracking-widest mb-3 ml-1">Upcoming Goals</h4>
+        <h4 className="text-[10px] font-bold text-gray-400 tracking-widest mb-3 ml-1">{t.goals.upcomingGoals}</h4>
         <div className="space-y-4">
            {MILESTONES_CONFIG.filter(config => resistedCount < config.threshold).map(config => {
               const progressPct = Math.min((resistedCount / config.threshold) * 100, 100);
               return (
                  <div key={config.key} className="card-duo p-4">
                      <div className="flex justify-between items-center mb-3">
-                        <h4 className="font-bold text-gray-800 text-sm">Resist {config.threshold} Cravings</h4>
+                        <h4 className="font-bold text-gray-800 text-sm">{t.goals.resistCravings.replace('{n}', String(config.threshold))}</h4>
                         <span className="text-xs font-bold text-gray-500">{resistedCount} / {config.threshold}</span>
                      </div>
                      <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden shadow-inner">
@@ -109,7 +124,7 @@ export function GoalsPage() {
 
       {/* Avoided Cigarettes */}
       <section className="card-duo bg-gray-900 text-white text-center py-8 shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
-        <p className="text-gray-400 font-bold text-xs tracking-wider mb-2">Cigarettes Avoided</p>
+        <p className="text-gray-400 font-bold text-xs tracking-wider mb-2">{t.goals.cigarettesAvoided}</p>
         <div className="text-6xl font-bold tracking-tight">{Math.max(savedCigarettes, 0)}</div>
       </section>
     </div>

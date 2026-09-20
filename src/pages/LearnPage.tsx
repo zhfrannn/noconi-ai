@@ -4,9 +4,11 @@ import { BookOpen, PlayCircle, Lightbulb, Bookmark, ArrowLeft, Share2, CheckCirc
 import { differenceInDays } from 'date-fns';
 import { LEARN_CATALOG, LearnContent } from '../data/learnContent';
 import { cn } from '../lib/utils';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export function LearnPage() {
   const { state, updateProfile } = useAppContext();
+  const { t } = useLanguage();
   const profile = state.profile;
   const [activeTab, setActiveTab] = useState<'All'|'Saved'>('All');
   const [activeFilter, setActiveFilter] = useState<string>('All');
@@ -71,26 +73,26 @@ export function LearnPage() {
       <header className="p-4 pt-6 bg-white border-b border-gray-200 sticky top-0 z-10">
          <div className="mb-4">
             <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-               Learn <Brain className="w-5 h-5 text-brand" />
+               {t.learn.title} <Brain className="w-5 h-5 text-brand" />
             </h1>
-            <p className="text-gray-500 font-medium text-sm mt-1">Science-based education & stories</p>
+            <p className="text-gray-500 font-medium text-sm mt-1">{t.learn.subtitle}</p>
          </div>
          <div className="flex gap-4">
             <button 
                className={`pb-2 text-sm font-bold border-b-2 transition-colors ${activeTab === 'All' ? 'text-gray-900 border-gray-900' : 'text-gray-400 border-transparent hover:text-gray-600'}`}
                onClick={() => setActiveTab('All')}
-            >Library</button>
+            >{t.learn.library}</button>
             <button 
                className={`pb-2 text-sm font-bold border-b-2 transition-colors flex items-center gap-1 ${activeTab === 'Saved' ? 'text-gray-900 border-gray-900' : 'text-gray-400 border-transparent hover:text-gray-600'}`}
                onClick={() => setActiveTab('Saved')}
-            >Saved {bookmarkedIds.length > 0 && <span className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-md text-[10px]">{bookmarkedIds.length}</span>}</button>
+            >{t.learn.saved} {bookmarkedIds.length > 0 && <span className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-md text-[10px]">{bookmarkedIds.length}</span>}</button>
          </div>
       </header>
 
       <div className="p-4 space-y-4">
          {activeTab === 'All' && featuredContent && !readIds.includes(featuredContent.id) && (
             <div className="space-y-2">
-               <h3 className="font-bold text-gray-800 text-sm ml-1 flex items-center gap-2"><Lightbulb className="w-4 h-4 text-amber-500"/> Featured Today</h3>
+               <h3 className="font-bold text-gray-800 text-sm ml-1 flex items-center gap-2"><Lightbulb className="w-4 h-4 text-amber-500"/> {t.learn.featuredToday}</h3>
                <div 
                   className="bg-brand text-white rounded-2xl p-4 shadow-sm cursor-pointer border-brand-dark border-2 hover:-translate-y-1 transition-transform relative overflow-hidden"
                   style={{boxShadow: '0 4px 0 var(--color-brand-dark)'}}
@@ -99,7 +101,7 @@ export function LearnPage() {
                   <div className="relative z-10 space-y-2">
                      <div className="flex justify-between items-start">
                         <span className="text-xs font-bold bg-black/20 px-2 py-1 rounded-md">
-                           Day {currentDay} Guide
+                           {t.learn.dayGuide.replace('{n}', String(currentDay))}
                         </span>
                         <button onClick={(e) => handleBookmark(e, featuredContent.id)} className="p-1 -mr-2 -mt-2">
                            <Bookmark className={`w-5 h-5 ${bookmarkedIds.includes(featuredContent.id) ? 'fill-white text-white' : 'text-white/70'}`} />
@@ -146,7 +148,7 @@ export function LearnPage() {
             ))}
             {displayContent.length === 0 && (
                <div className="text-center py-8 bg-white rounded-2xl border-2 border-dashed border-gray-200">
-                  <p className="text-gray-500 font-medium text-sm">No items found</p>
+                  <p className="text-gray-500 font-medium text-sm">{t.learn.noItems}</p>
                </div>
             )}
          </div>

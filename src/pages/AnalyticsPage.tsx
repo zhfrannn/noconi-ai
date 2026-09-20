@@ -3,9 +3,11 @@ import { useAppContext } from '../store/AppContext';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ReferenceLine } from 'recharts';
 import { format, subDays, differenceInDays } from 'date-fns';
 import { BrainCircuit, Activity, Printer, ChevronDown, CheckCircle2, FileText, HeartPulse, Stethoscope, Droplets, Wind, Focus } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export function AnalyticsPage() {
   const { state } = useAppContext();
+  const { t, language } = useLanguage();
   const [activeSection, setActiveSection] = useState<'bhi' | 'cravings' | 'inhaler' | 'method' | 'psych' | 'timeline'>('bhi');
 
   const now = new Date();
@@ -135,9 +137,9 @@ export function AnalyticsPage() {
      if (mInt > oInt + 1.5) score += 2;
      else if (mInt > oInt) score += 1;
 
-     if (score <= 2) return { level: 'Rendah', score, actionable: 'Dependensi fisikmu rendah. Fokus pada pemicu sosial dan kebiasaan.' };
-     if (score <= 4) return { level: 'Sedang', score, actionable: 'Dependensi moderat. Gunakan inhaler selalu di pagi hari.' };
-     return { level: 'Tinggi', score, actionable: 'Dependensi fisik kuat terdeteksi. Pertimbangkan NRT dari dokter jika metode behavioral tidak cukup.' };
+     if (score <= 2) return { level: t.home.levels.low, score, actionable: language === 'id' ? 'Dependensi fisikmu rendah. Fokus pada pemicu sosial dan kebiasaan.' : 'Low physical dependency. Focus on social triggers and habits.' };
+     if (score <= 4) return { level: t.home.levels.medium, score, actionable: language === 'id' ? 'Dependensi moderat. Gunakan inhaler selalu di pagi hari.' : 'Moderate dependency. Use your inhaler consistently in the mornings.' };
+     return { level: t.home.levels.high, score, actionable: language === 'id' ? 'Dependensi fisik kuat terdeteksi. Pertimbangkan NRT dari dokter jika metode behavioral tidak cukup.' : 'Strong physical dependency detected. Consider NRT from a doctor if behavioral methods are insufficient.' };
   }, [cravings, state.miReductionLogs, state.profile]);
 
 
@@ -170,8 +172,8 @@ export function AnalyticsPage() {
         }
      });
      return [
-        { name: 'Patchwork Inhaler', rate: withInhaler > 0 ? Math.round((withResisted/withInhaler)*100) : 0 },
-        { name: 'Sensory Fallback', rate: noInhaler > 0 ? Math.round((noResisted/noInhaler)*100) : 0 }
+        { name: 'With Inhaler', rate: withInhaler > 0 ? Math.round((withResisted/withInhaler)*100) : 0 },
+        { name: 'Without Inhaler', rate: noInhaler > 0 ? Math.round((noResisted/noInhaler)*100) : 0 }
      ];
   }, [inhalerLogs]);
 
@@ -265,13 +267,13 @@ export function AnalyticsPage() {
     <div className="flex flex-col h-full bg-gray-50/50 pb-24 overflow-y-auto w-full relative">
       <header className="p-3 pt-8 bg-white border-b border-gray-100 flex justify-between items-center sticky top-0 z-10 print-hidden">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            Clinical Analytics <Stethoscope className="w-5 h-5 text-brand" />
+           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            {t.analytics.title} <Stethoscope className="w-5 h-5 text-brand" />
           </h1>
-          <p className="text-gray-500 font-medium text-sm">Medical-grade behavioral insights.</p>
+          <p className="text-gray-500 font-medium text-sm">{t.analytics.subtitle}</p>
         </div>
         <button onClick={handlePrint} className="flex items-center gap-1.5 bg-gray-100 px-3 py-2 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-200">
-           <Printer className="w-4 h-4" /> Print
+           <Printer className="w-4 h-4" /> {t.analytics.print}
         </button>
       </header>
 
@@ -325,12 +327,12 @@ export function AnalyticsPage() {
                      Craving Trajectory (30D)
                      <Activity className="w-5 h-5 text-gray-400" />
                   </h3>
-                  {withdrawalWarning && (
-                     <div className="mb-4 bg-brand-surface border border-brand/30 p-3 rounded-xl">
-                        <h4 className="text-brand-dark font-bold text-xs mb-1">Clinical Warning: Withdrawal Intensification</h4>
-                        <p className="text-brand-dark text-sm font-medium">Your craving frequency is decreasing, but the average intensity is rising. This is a normal biological response at this phase. Ensure PATCHWORK is always ready.</p>
-                     </div>
-                  )}
+                   {withdrawalWarning && (
+                      <div className="mb-4 bg-brand-surface border border-brand/30 p-3 rounded-xl">
+                         <h4 className="text-brand-dark font-bold text-xs mb-1">{t.analytics.withdrawalWarning}</h4>
+                         <p className="text-brand-dark text-sm font-medium">{t.analytics.withdrawalDesc}</p>
+                      </div>
+                   )}
                   <div className="h-48">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={trajectoryData}>
@@ -425,10 +427,10 @@ export function AnalyticsPage() {
          {(activeSection === 'inhaler' || true) && (
             <div className={`space-y-6 print-only-block ${activeSection !== 'inhaler' ? 'hidden print:block' : ''}`}>
                <div className="card-duo">
-                  <h3 className="font-bold text-gray-800 mb-4 flex items-center justify-between">
-                     Patchwork Effectiveness <Wind className="w-5 h-5 text-gray-400" />
-                  </h3>
-                  <p className="text-xs font-medium text-gray-500 mb-4">Average point reduction after using inhaler over 30 days.</p>
+                   <h3 className="font-bold text-gray-800 mb-4 flex items-center justify-between">
+                      {t.analytics.inhalerEffectiveness} <Wind className="w-5 h-5 text-gray-400" />
+                   </h3>
+                   <p className="text-xs font-medium text-gray-500 mb-4">{t.analytics.inhalerEffectivenessDesc}</p>
                   <div className="h-48">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={inhalerEffectivenessTrend}>
@@ -442,8 +444,8 @@ export function AnalyticsPage() {
                </div>
                
                <div className="card-duo bg-sky-50 border-sky-100">
-                  <h3 className="font-bold text-sky-900 mb-4 text-sm">Quasi-Experimental Impact</h3>
-                  <p className="text-xs font-medium text-sky-700 mb-4">Perbandingan rasio sukses menahan craving dengan vs tanpa inhaler.</p>
+                   <h3 className="font-bold text-sky-900 mb-4 text-sm">{t.analytics.quasiExperimental}</h3>
+                   <p className="text-xs font-medium text-sky-700 mb-4">{t.analytics.quasiExperimentalDesc}</p>
                   <div className="h-32 mb-2">
                      <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={inhalerVsNoInhaler} layout="vertical">
@@ -457,20 +459,20 @@ export function AnalyticsPage() {
                </div>
 
                <div className="card-duo border-gray-200 bg-white">
-                  <h3 className="font-bold text-gray-800 mb-2 text-sm flex items-center justify-between">
-                     Keampuhan Inhaler Rata-rata
-                  </h3>
-                  <p className="text-xs font-medium text-gray-500 mb-3">Penurunan intensitas rata-rata setelah menggunakan PATCHWORK.</p>
+                   <h3 className="font-bold text-gray-800 mb-2 text-sm flex items-center justify-between">
+                      {t.analytics.avgEffectiveness}
+                   </h3>
+                   <p className="text-xs font-medium text-gray-500 mb-3">{t.analytics.inhalerEffectivenessDesc}</p>
                   <div className="flex items-center gap-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
                      <span className="text-4xl font-bold text-brand tracking-tighter">
                         {inhalerLogs.filter(l => l.intensityAfter !== null && l.intensityAfter < l.intensityBefore).length > 0 
                            ? (inhalerLogs.filter(l => l.intensityAfter !== null && l.intensityAfter < l.intensityBefore).reduce((acc, l) => acc + (l.intensityBefore - l.intensityAfter!), 0) / inhalerLogs.filter(l => l.intensityAfter !== null && l.intensityAfter < l.intensityBefore).length).toFixed(1)
                            : "0"}
                      </span>
-                     <div className="flex flex-col">
-                        <span className="text-sm font-bold text-gray-700">Poin Penurunan</span>
-                        <span className="text-[10px] font-bold tracking-widest text-gray-400">Rata-rata intensitas craving drop</span>
-                     </div>
+                      <div className="flex flex-col">
+                         <span className="text-sm font-bold text-gray-700">{t.analytics.pointReduction}</span>
+                         <span className="text-[10px] font-bold tracking-widest text-gray-400">{t.analytics.avgIntensityDrop}</span>
+                      </div>
                   </div>
                </div>
             </div>
@@ -548,9 +550,9 @@ export function AnalyticsPage() {
          {(activeSection === 'timeline' || true) && (
             <div className={`space-y-6 print-only-block ${activeSection !== 'timeline' ? 'hidden print:block' : ''}`}>
                <div className="card-duo">
-                  <h3 className="font-bold text-gray-800 mb-4 flex items-center justify-between">
-                     Clinical Milestones <HeartPulse className="w-5 h-5 text-brand" />
-                  </h3>
+                   <h3 className="font-bold text-gray-800 mb-4 flex items-center justify-between">
+                      {t.analytics.clinicalMilestones} <HeartPulse className="w-5 h-5 text-brand" />
+                   </h3>
                   <div className="relative pl-6 border-l-2 border-gray-100 space-y-6 my-2">
                      {milestones.map((ms, i) => {
                         const isCompleted = timeSinceQuit >= ms.minutes;
@@ -576,7 +578,7 @@ export function AnalyticsPage() {
       <div className="hidden print:block p-8 bg-white text-black font-sans w-full max-w-4xl mx-auto">
          <div className="border-b-2 border-black pb-4 mb-6">
             <h1 className="text-3xl font-bold tracking-wider">BEHAVIORAL HEALTH REPORT</h1>
-            <p className="text-sm mt-1">Generated by Breathe AI by Patchouni x PATCHWORK system - Patient Copy</p>
+               <p className="text-sm mt-1">Generated by Breathe AI by Noconi - Patient Copy</p>
          </div>
 
          <div className="mb-6">
@@ -615,7 +617,7 @@ export function AnalyticsPage() {
             <div className="text-sm space-y-2 mt-2">
                <p><strong>Primary Method:</strong> {currentMethod.toUpperCase()}</p>
                <p><strong>Method Engagement Level:</strong> {methodFit}</p>
-               <p><strong>Sensory Intervention:</strong> PATCHWORK Inhaler</p>
+               <p><strong>Sensory Intervention:</strong> Breathe AI Inhaler by Noconi</p>
                <p><strong>Impact vs Fallback:</strong> {inhalerVsNoInhaler[0].rate}% (With Inhaler) vs {inhalerVsNoInhaler[1].rate}% (Without)</p>
                <p><strong>Psychological Correlation:</strong> Craving average varies by mood, with highest at '{moodCorrelation[0]?.mood || 'N/A'}'.</p>
             </div>
@@ -623,7 +625,7 @@ export function AnalyticsPage() {
 
          <div className="mt-12 pt-4 border-t border-gray-200">
             <p className="text-[10px] text-gray-500 leading-relaxed text-justify">
-               Disclaimer: This data is self-reported behavioral data collected longitudinally via the digital intervention of Breathe AI by Patchouni and the PATCHWORK Inhaler. The BHI (Behavioral Health Index) and NDI scores are calculated based on adapted metrics from clinical instruments, but this is not a formal medical diagnosis. This report is intended to be used as discussion material between the patient and a healthcare professional (Doctor/Counselor).
+               Disclaimer: This data is self-reported behavioral data collected longitudinally via the digital intervention of Breathe AI by Noconi and the Breathe AI Inhaler. The BHI (Behavioral Health Index) and NDI scores are calculated based on adapted metrics from clinical instruments, but this is not a formal medical diagnosis. This report is intended to be used as discussion material between the patient and a healthcare professional (Doctor/Counselor).
             </p>
          </div>
       </div>

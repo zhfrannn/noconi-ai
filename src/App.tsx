@@ -23,6 +23,7 @@ import { AuthPage } from "./pages/AuthPage";
 import { useBluetoothInhaler } from "./hooks/useBluetoothInhaler";
 import { AnimatePresence, motion } from "motion/react";
 import { CheckCircle2 } from "lucide-react";
+import { LanguageProvider, useLanguage } from "./contexts/LanguageContext";
 
 type Tab =
   | "home"
@@ -123,7 +124,7 @@ function MainApp() {
                </div>
                <div>
                   <h4 className="font-bold text-gray-900 text-sm">Inhaler Logged!</h4>
-                  <p className="text-xs text-brand font-bold uppercase tracking-wider">Breathe Smart Inhaler by Patchouni</p>
+                  <p className="text-xs text-brand font-bold uppercase tracking-wider">Breathe Smart Inhaler by Noconi</p>
                </div>
             </div>
           </motion.div>
@@ -135,10 +136,12 @@ function MainApp() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppProvider>
-        <MainApp />
-      </AppProvider>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <AppProvider>
+          <MainApp />
+        </AppProvider>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }

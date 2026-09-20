@@ -19,13 +19,14 @@ apiRouter.post("/chat", async (req, res) => {
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY });
     const { 
        messageText, recentHistory, methodEngagements, currentDay, primaryTriggers, 
-       resistanceRate, last7cravingsCount, topMood, bhiProxy, emotion, quitMethod 
+       resistanceRate, last7cravingsCount, topMood, bhiProxy, emotion, quitMethod,
+       language = 'id'
     } = req.body;
 
     const systemInstruction = `
-You are Breathe AI by Patchouni, an empathetic, evidence-based cognitive behavioral therapy (CBT) and Motivational Interviewing (MI) coach for quitting smoking.
+You are Breathe AI by Noconi, an empathetic, evidence-based cognitive behavioral therapy (CBT) and Motivational Interviewing (MI) coach for quitting smoking.
 Your persona: You are highly trained but conversational, interactive, and FUN!
-Respond ONLY in English. Do NOT be overly wordy.
+Language: ${language === 'id' ? 'Respond ONLY in Indonesian (Bahasa Indonesia). Use friendly, natural, and supportive Indonesian.' : 'Respond ONLY in English.'} Do NOT be overly wordy.
 Keep responses SHORT (max 2-3 sentences in the final output) and highly actionable. Validate feelings first. Do NOT give medical advice.
 
 CRITICAL RESTRICTION: You MUST ONLY discuss topics related to smoking cessation, tobacco, vaping, habit replacement, psychology of quitting, and healthcare. If the user asks about ANYTHING else (e.g. coding, current events, random trivia), professionally decline and redirect to their health or quitting goals.
@@ -147,9 +148,9 @@ apiRouter.post("/insight", async (req, res) => {
     }
 
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY });
-    const { statsContext } = req.body;
+    const { statsContext, language = 'id' } = req.body;
 
-    const systemInstruction = `You are a strict, concise smoking cessation coach. Generate a short 2-3 sentence insight based on this data. Emphasize their method and point out positive trends. No generic lines. Use emojis sparingly.`;
+    const systemInstruction = `You are an empathetic, concise smoking cessation coach. Generate a short 2-3 sentence insight based on this data. Emphasize their method and point out positive trends. No generic lines. Use emojis sparingly. Language requirement: ${language === 'id' ? 'Respond in Indonesian (Bahasa Indonesia).' : 'Respond in English.'}`;
     
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",

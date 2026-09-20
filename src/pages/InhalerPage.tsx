@@ -15,6 +15,7 @@ import {
 import { useAppContext } from "../store/AppContext";
 import { cn } from "../lib/utils";
 import { InhalerLog } from "../lib/db";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const VARIANTS = [
   {
@@ -55,6 +56,7 @@ const CONTEXTS = [
 
 export default function InhalerPage({ startLogging, setActiveTab }: { startLogging?: boolean, setActiveTab?: (t: any) => void }) {
   const { state, addInhalerLog, deleteInhalerLog } = useAppContext();
+  const { t } = useLanguage();
   const [showLogModal, setShowLogModal] = useState(startLogging || false);
 
   useEffect(() => {
@@ -240,27 +242,27 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
       <header className="mb-6 flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            PATCHWORK <Wind className="w-5 h-5 text-gray-500" />
+            {t.inhaler.title} <Wind className="w-5 h-5 text-gray-500" />
           </h1>
           <p className="text-gray-500 font-medium">
-            Inhaler & Sensory Override
+            {t.inhaler.subtitle}
           </p>
         </div>
         <button
           onClick={() => setShowLogModal(true)}
           className="btn-primary !py-2 !px-4 shadow-brand/20"
         >
-          Log Session
+          {t.inhaler.logSession}
         </button>
       </header>
 
       {logs.length < 5 && (
         <div className="bg-brand-50 border border-brand-100 p-4 rounded-2xl mb-6 shadow-sm">
           <h3 className="font-bold text-brand-700 flex items-center gap-1">
-            <Zap className="w-4 h-4" /> AI Calibration
+            <Zap className="w-4 h-4" /> {t.inhaler.aiCalibration}
           </h3>
           <p className="text-sm font-medium text-brand-600 mt-1">
-            Log at least 5 sessions to get insights and personal inhaler recommendations from AI.
+            {t.inhaler.aiCalibrationDesc}
           </p>
         </div>
       )}
@@ -269,7 +271,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
         <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-3 shadow-2xl shadow-gray-900/20 mb-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-brand/20 blur-3xl rounded-full"></div>
           <div className="flex items-center gap-2 text-brand-300 font-bold text-[10px] tracking-widest mb-3">
-            <BrainCircuit className="w-4 h-4" /> AI RECOMMENDATION
+            <BrainCircuit className="w-4 h-4" /> {t.inhaler.aiRecommendation}
           </div>
           <h3 className="text-white font-bold text-lg mb-2">
             For <span className="text-brand-400">"{topContextName}"</span> cravings, {bestVariantForTopContext.name} has proven to be the most effective.
@@ -288,10 +290,10 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
             </div>
             <div>
               <h3 className="font-bold text-brand-900 leading-tight">
-                Weekly Insight
+                {t.inhaler.weeklyInsight}
               </h3>
               <p className="text-[10px] font-bold text-brand-500 tracking-wider mt-0.5">
-                Ringkasan 7 Hari Terakhir
+                {t.inhaler.weeklySummary}
               </p>
             </div>
           </div>
@@ -302,7 +304,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
                 {weeklyInsight.total}
               </span>
               <span className="text-[10px] font-bold text-gray-400">
-                Sessions
+                {t.inhaler.sessions}
               </span>
             </div>
             <div className="bg-white rounded-xl p-3 text-center">
@@ -313,7 +315,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
                 {weeklyInsight.topVariant.split("-")[0]}
               </span>
               <span className="text-[10px] font-bold text-gray-400">
-                Top Variant
+                {t.inhaler.topVariant}
               </span>
             </div>
             <div className="bg-white rounded-xl p-3 text-center">
@@ -321,7 +323,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
                 -{weeklyInsight.avgReduction}
               </span>
               <span className="text-[10px] font-bold text-gray-400">
-                Craving Points
+                {t.inhaler.cravingPoints}
               </span>
             </div>
           </div>
@@ -334,9 +336,9 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
 
       <section className="mb-8">
         <h2 className="font-bold text-gray-800 mb-3 flex items-center justify-between">
-          Effectiveness per Variant
+          {t.inhaler.effectivenessTitle}
           <span className="text-xs font-bold text-gray-400 tracking-widest">
-            Scoreboard
+            {t.inhaler.scoreboard}
           </span>
         </h2>
         <div className="grid grid-cols-1 gap-3">
@@ -358,19 +360,18 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
                   <h4 className="font-bold text-gray-800 text-sm">{v.name}</h4>
                   {v.stats.count > 0 ? (
                     <p className="text-xs font-bold text-brand-dark mt-0.5 tracking-tight flex items-center gap-0.5">
-                      <CheckCircle2 className="w-3 h-3" /> Drops{" "}
-                      {v.stats.avgReduction.toFixed(1)} points on avg
+                      <CheckCircle2 className="w-3 h-3" /> {t.inhaler.dropsPoints.replace('{n}', v.stats.avgReduction.toFixed(1))}
                     </p>
                   ) : (
                     <p className="text-xs font-medium text-gray-400 mt-0.5">
-                      Not Tried Yet
+                      {t.inhaler.notTriedYet}
                     </p>
                   )}
                 </div>
               </div>
               {i === 0 && v.stats.count > 0 && (
                 <div className="bg-brand/10 text-brand px-2 py-1 rounded-md text-[10px] font-extrabold tracking-wide">
-                  Most Effective
+                  {t.inhaler.mostEffective}
                 </div>
               )}
             </div>
@@ -381,7 +382,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
       {logs.length > 0 && (
         <section className="mb-8 card-duo">
           <h2 className="font-bold text-gray-800 text-sm mb-4">
-            Your Top Craving Contexts:
+            {t.inhaler.topContexts}
           </h2>
           <div className="space-y-3">
             {topContexts.map(([ctx, count], i) => (
@@ -404,7 +405,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
 
       <section>
         <h2 className="font-bold text-gray-800 mb-3 flex items-center justify-between">
-          Session History
+          {t.inhaler.sessionHistory}
         </h2>
         <div className="space-y-3">
           {logs.slice(0, 10).map((log) => {
@@ -432,7 +433,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
                         )}
                       ></div>
                       <span className="font-bold text-sm text-gray-800">
-                        {v ? v.name : "Inhaler-free (Fallback)"}
+                        {v ? v.name : t.inhaler.inhalerFreeFallback}
                       </span>
                       <span className="text-[10px] text-gray-400 font-medium">
                         {new Date(log.timestamp).toLocaleTimeString([], {
@@ -466,19 +467,19 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
                       </div>
                     ) : (
                       <span className="text-xs font-bold text-brand bg-brand-surface px-2 py-0.5 rounded-md">
-                        Pending
+                        {t.inhaler.pending}
                       </span>
                     )}
                   </div>
                 </div>
                 {isExpanded && (
                   <div className="mt-4 pt-4 border-t border-gray-100 animate-in slide-in-from-top-2 flex justify-between items-center">
-                    <button
-                      onClick={() => deleteInhalerLog(log.id!)}
-                      className="text-xs font-bold text-brand hover:bg-brand-surface px-2 py-1 rounded-md transition-colors"
-                    >
-                      Delete Record
-                    </button>
+                     <button
+                       onClick={() => deleteInhalerLog(log.id!)}
+                       className="text-xs font-bold text-brand hover:bg-brand-surface px-2 py-1 rounded-md transition-colors"
+                     >
+                       {t.inhaler.deleteRecord}
+                     </button>
                   </div>
                 )}
               </div>
@@ -488,7 +489,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
             <div className="text-center p-8 bg-gray-50 border border-dashed border-gray-200 rounded-2xl">
               <Wind className="w-8 h-8 text-gray-300 mx-auto mb-2" />
               <p className="text-sm font-medium text-gray-500">
-                Belum ada sesi tercatat.
+                {t.inhaler.noSessions}
               </p>
             </div>
           )}
@@ -501,7 +502,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
           <div className="w-full max-w-md bg-white rounded-t-3xl shadow-2xl flex flex-col h-[90vh]">
             <div className="p-3 border-b border-gray-100 flex justify-between items-center shrink-0">
               <h2 className="font-bold text-xl text-gray-800">
-                Log Penggunaan
+                {t.inhaler.logModalTitle}
               </h2>
               <button
                 onClick={() => setShowLogModal(false)}
@@ -515,7 +516,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
               <div>
                 <div className="flex justify-between items-center mb-3">
                   <label className="block text-sm font-bold text-gray-800">
-                    1. Varian yang dipakai
+                    1. {t.inhaler.variantLabel}
                   </label>
                 </div>
                 {inhalerAvailable ? (

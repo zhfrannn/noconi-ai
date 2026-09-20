@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useAppContext } from "../store/AppContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,22 +23,24 @@ interface LayoutProps {
 
 export function Layout({ children, activeTab, setActiveTab }: LayoutProps) {
   const { addInhalerLog } = useAppContext();
+  const { t, language } = useLanguage();
+
   const navItems = [
-    { id: "home", icon: Home, label: "Home" },
-    { id: "method", icon: MapIcon, label: "My Plan" },
-    { id: "log", icon: PlusCircle, label: "Log" },
-    { id: "chat", icon: MessageCircle, label: "Coach" },
-    { id: "more", icon: BarChart2, label: "More" },
+    { id: "home", icon: Home, label: t.nav.home },
+    { id: "method", icon: MapIcon, label: t.nav.myPlan },
+    { id: "log", icon: PlusCircle, label: t.nav.log },
+    { id: "chat", icon: MessageCircle, label: t.nav.coach },
+    { id: "more", icon: BarChart2, label: t.nav.more },
   ];
 
   const subItems = [
-    { id: "inhaler", icon: BookOpen, label: "Inhaler" },
-    { id: "shop", icon: ShoppingCart, label: "Shop" },
-    { id: "learn", icon: BookOpen, label: "Learn" },
-    { id: "analytics", icon: BarChart2, label: "Analytics" },
-    { id: "goals", icon: Target, label: "Goals" },
-    { id: "tools", icon: BookOpen, label: "Tools" },
-    { id: "settings", icon: Settings, label: "Settings" },
+    { id: "inhaler", icon: BookOpen, label: t.nav.inhaler },
+    { id: "shop", icon: ShoppingCart, label: t.nav.shop },
+    { id: "learn", icon: BookOpen, label: t.nav.learn },
+    { id: "analytics", icon: BarChart2, label: t.nav.analytics },
+    { id: "goals", icon: Target, label: t.nav.goals },
+    { id: "tools", icon: BookOpen, label: t.nav.tools },
+    { id: "settings", icon: Settings, label: t.nav.settings },
   ];
 
   const [showMore, setShowMore] = React.useState(false);
@@ -50,7 +53,6 @@ export function Layout({ children, activeTab, setActiveTab }: LayoutProps) {
       </main>
 
       {/* Log Options Menu Popup */}
-      {/* Log Options Menu Popup */}
       {showLogOptions && (
         <div
           className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex flex-col justify-end transition-opacity"
@@ -61,10 +63,12 @@ export function Layout({ children, activeTab, setActiveTab }: LayoutProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
-            <h3 className="font-bold text-gray-900 text-xl mb-5 ml-1">What do you want to log?</h3>
+            <h3 className="font-bold text-gray-900 text-xl mb-5 ml-1">
+              {t.logModal.title}
+            </h3>
             <div className="flex flex-col gap-4">
             <button
-              className="card-duo flex items-center gap-4 p-5 text-left border-brand bg-brand-surface shadow-[0_4px_0_var(--color-brand-dark)] hover:bg-brand-surface/80 active:translate-y-1 active:shadow-none transition-all"
+              className="card-duo flex items-center gap-4 p-5 text-left border-brand bg-brand-surface shadow-[0_4px_0_var(--color-brand-dark)] hover:bg-brand-surface/80 active:translate-y-1 active:shadow-none transition-all cursor-pointer"
               onClick={() => {
                 setShowLogOptions(false);
                 setActiveTab("log");
@@ -75,16 +79,16 @@ export function Layout({ children, activeTab, setActiveTab }: LayoutProps) {
               </div>
               <div>
                 <h4 className="font-bold text-xl text-brand-dark leading-tight mb-1">
-                  Log Craving
+                  {t.logModal.logCraving}
                 </h4>
                 <p className="text-sm text-brand/80 font-bold tracking-wide">
-                  Feeling the urge to smoke?
+                  {t.logModal.logCravingDesc}
                 </p>
               </div>
             </button>
 
             <button
-              className="card-duo flex items-center gap-4 p-5 text-left border-blue-200 bg-blue-50 shadow-[0_4px_0_var(--color-blue-200)] hover:bg-blue-100 active:translate-y-1 active:shadow-none transition-all"
+              className="card-duo flex items-center gap-4 p-5 text-left border-blue-200 bg-blue-50 shadow-[0_4px_0_var(--color-blue-200)] hover:bg-blue-100 active:translate-y-1 active:shadow-none transition-all cursor-pointer"
               onClick={() => {
                 setShowLogOptions(false);
                 setActiveTab("inhaler_log");
@@ -95,16 +99,16 @@ export function Layout({ children, activeTab, setActiveTab }: LayoutProps) {
               </div>
               <div>
                 <h4 className="font-bold text-xl text-blue-900 leading-tight mb-1">
-                  Log Inhaler Use
+                  {t.logModal.logInhaler}
                 </h4>
                 <p className="text-sm text-blue-500 font-bold tracking-wide">
-                  Record your inhaler session
+                  {t.logModal.logInhalerDesc}
                 </p>
               </div>
             </button>
 
             <button
-              className="card-duo flex items-center gap-3 p-3 text-left border-amber-200 bg-amber-50 shadow-[0_4px_0_var(--color-amber-200)] hover:bg-amber-100 active:translate-y-1 active:shadow-none transition-all"
+              className="card-duo flex items-center gap-3 p-3 text-left border-amber-200 bg-amber-50 shadow-[0_4px_0_var(--color-amber-200)] hover:bg-amber-100 active:translate-y-1 active:shadow-none transition-all cursor-pointer"
               onClick={async () => {
                 try {
                   await addInhalerLog({
@@ -128,10 +132,10 @@ export function Layout({ children, activeTab, setActiveTab }: LayoutProps) {
               </div>
               <div>
                 <h4 className="font-bold text-md text-amber-900 leading-tight">
-                  Quick Auto-Log Inhaler
+                  {language === 'id' ? 'Catat Cepat Inhaler' : 'Quick Auto-Log Inhaler'}
                 </h4>
                 <p className="text-[10px] text-amber-600 font-bold tracking-wide">
-                  1-Click instant log
+                  {language === 'id' ? '1-Klik rekam instan' : '1-Click instant log'}
                 </p>
               </div>
             </button>
@@ -151,7 +155,9 @@ export function Layout({ children, activeTab, setActiveTab }: LayoutProps) {
             onClick={(e) => e.stopPropagation()}
           >
              <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
-             <h3 className="font-bold text-gray-900 text-xl mb-5 ml-1">More Features</h3>
+             <h3 className="font-bold text-gray-900 text-xl mb-5 ml-1">
+               {language === 'id' ? 'Fitur Lainnya' : 'More Features'}
+             </h3>
              <div className="grid grid-cols-2 gap-4">
               {subItems.map((item) => (
                 <button
@@ -161,7 +167,7 @@ export function Layout({ children, activeTab, setActiveTab }: LayoutProps) {
                     setShowMore(false);
                   }}
                   className={cn(
-                    "flex flex-col items-center justify-center gap-3 p-4 rounded-3xl border-2 transition-all font-bold text-center",
+                    "flex flex-col items-center justify-center gap-3 p-4 rounded-3xl border-2 transition-all font-bold text-center cursor-pointer",
                     activeTab === item.id
                       ? "bg-brand-surface border-brand shadow-[0_4px_0_var(--color-brand-dark)] text-brand-dark"
                       : "bg-white border-gray-200 text-gray-700 shadow-[0_4px_0_#e5e7eb] hover:bg-gray-50 active:translate-y-1 active:shadow-none",
@@ -209,7 +215,7 @@ export function Layout({ children, activeTab, setActiveTab }: LayoutProps) {
                   setActiveTab(item.id);
                 }
               }}
-              className="flex flex-col items-center gap-1.5 relative px-2 py-1 rounded-2xl transition-colors"
+              className="flex flex-col items-center gap-1.5 relative px-2 py-1 rounded-2xl transition-colors cursor-pointer"
             >
               <div
                 className={cn(

@@ -39,6 +39,7 @@ export interface UserTable {
   miLastLogDate?: string;
   miPros?: string[];
   miCons?: string[];
+  language?: 'id' | 'en';
 }
 
 export interface CbtThoughtJournal {
