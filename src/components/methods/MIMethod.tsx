@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../../store/AppContext';
 import { Target, MessageSquare, CheckCircle2, BookOpen, ChevronDown, ChevronUp, Edit3, X, History, PlusCircle } from 'lucide-react';
 import { cn } from '../../lib/utils';
@@ -256,7 +256,7 @@ export default function MIMethod() {
                <div className="flex-1 bg-brand/5 border-2 border-brand/20 rounded-2xl p-4 shadow-[0_4px_0_var(--color-brand-light)]">
                   <h3 className="font-bold text-brand-dark mb-3 border-b-2 border-brand/10 pb-2 text-sm">Reasons I Smoke (Pros)</h3>
                   <ul className="space-y-2 mb-4">
-                     {pros.map((p, i) => <li key={i} className="text-sm font-medium text-brand-dark bg-white p-3 rounded-xl border-2 border-brand/10 shadow-sm">• {p}</li>)}
+                     {pros.map((p, i) => <li key={i} className="text-sm font-medium text-brand-dark bg-white p-3 rounded-xl border-2 border-brand/10 shadow-sm">â€¢ {p}</li>)}
                   </ul>
                   <div className="flex gap-2">
                      <input type="text" value={newPro} onChange={e => setNewPro(e.target.value)} placeholder="Add reason..." className="flex-1 text-sm font-medium p-3 rounded-xl border-2 border-brand/20 outline-none focus:border-brand focus:bg-white bg-white/50 transition-colors" />
@@ -271,7 +271,7 @@ export default function MIMethod() {
                <div className="flex-1 bg-white border-2 border-gray-200 rounded-2xl p-4 mb-4 shadow-[0_4px_0_#E5E7EB]">
                   <h3 className="font-bold text-gray-900 mb-3 border-b-2 border-gray-100 pb-2 text-sm">Reasons I Want to Quit</h3>
                   <ul className="space-y-2 mb-4">
-                     {cons.map((c, i) => <li key={i} className="text-sm font-medium text-gray-800 bg-gray-50 p-3 rounded-xl border-2 border-gray-100 shadow-sm">• {c}</li>)}
+                     {cons.map((c, i) => <li key={i} className="text-sm font-medium text-gray-800 bg-gray-50 p-3 rounded-xl border-2 border-gray-100 shadow-sm">â€¢ {c}</li>)}
                   </ul>
                   <div className="flex gap-2">
                      <input type="text" value={newCon} onChange={e => setNewCon(e.target.value)} placeholder="Add reason..." className="flex-1 text-sm font-medium p-3 rounded-xl border-2 border-gray-200 outline-none focus:border-brand bg-gray-50 focus:bg-white transition-colors" />

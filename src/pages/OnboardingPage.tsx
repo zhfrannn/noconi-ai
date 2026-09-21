@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useAppContext } from '../store/AppContext';
 import { DependancyLevel } from '../types';
 import { ArrowRight, ShieldCheck, HeartPulse } from 'lucide-react';

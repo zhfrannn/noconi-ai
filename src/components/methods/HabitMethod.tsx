@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../../store/AppContext';
 import { RefreshCw, Map as MapIcon, ChevronRight, BookOpen, ChevronDown, ChevronUp, Plus, X, Hand, CheckCircle2 } from 'lucide-react';
 import { cn } from '../../lib/utils';

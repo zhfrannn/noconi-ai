@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useAppContext } from '../../store/AppContext';
 import { BrainCircuit, BookOpen, PenTool, HeartPulse, ChevronRight, X, ChevronDown, ChevronUp, CheckCircle2 } from 'lucide-react';
 import { cn } from '../../lib/utils';

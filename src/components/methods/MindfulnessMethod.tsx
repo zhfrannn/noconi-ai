@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '../../store/AppContext';
 import { Brain, Hand, Bell, Clock, BookOpen, Play, CheckCircle2, ChevronRight, X, ChevronDown, ChevronUp, Pause } from 'lucide-react';
 import { differenceInDays, isSameDay } from 'date-fns';
@@ -10,7 +10,7 @@ const SESSIONS = [
   { id: '2', title: 'Body Scan', duration: 10, steps: ['Lie down or sit comfortably.', 'Bring awareness to your toes.', 'Slowly move up through your legs.', 'Notice any tension in your back or shoulders.', 'Breathe into those areas and release.', 'Sweep your attention to the top of your head.'] },
   { id: '3', title: 'Craving Observation', duration: 5, steps: ['Notice the urge rising in your body.', 'Where do you feel it? Is it tight or hot?', 'Don\'t fight it, just observe it.', 'It is just a sensation, not a command.', 'Watch it peak and begin to pass.'] },
   { id: '4', title: 'Loving-Kindness', duration: 7, steps: ['Think of someone you care about deeply.', 'Silently wish them well.', 'Now direct that same kindness to yourself.', 'May I be at ease. May I be free from suffering.', 'Acknowledge how hard quitting is, and be gentle with yourself.'] },
-  { id: '5', title: 'RAIN Technique', duration: 8, steps: ['Recognize what is happening inside you.', 'Allow the feeling to be there without judgment.', 'Investigate with gentle curiosity—what does your body need?', 'Nurture yourself with self-compassion.'] },
+  { id: '5', title: 'RAIN Technique', duration: 8, steps: ['Recognize what is happening inside you.', 'Allow the feeling to be there without judgment.', 'Investigate with gentle curiosityâ€”what does your body need?', 'Nurture yourself with self-compassion.'] },
   { id: '6', title: 'Urge Surfing', duration: 5, steps: ['Picture your urge as an ocean wave.', 'Watch it build and crest.', 'Ride the wave without getting pulled under.', 'The wave is passing.', 'Notice the calm as the water recedes.'] },
   { id: '7', title: 'Morning Intention', duration: 5, steps: ['Take three deep breaths to start the day.', 'What is your intention for today?', 'You are committed to your health and freedom.', 'Visualize moving through the day successfully.', 'Open your eyes and begin.'] }
 ];
@@ -201,7 +201,7 @@ export default function MindfulnessMethod() {
             <div className="bg-white p-3 rounded-xl border-2 border-blue-100">
               <h4 className="text-xs font-bold text-blue-600 mb-1">Scientific Mechanism</h4>
               <p className="text-gray-600 text-sm leading-relaxed font-medium">
-                Mindfulness increases awareness of urges without automatic reactivity. It trains "decoupling"—breaking the deep-seated neurological link between craving and action.
+                Mindfulness increases awareness of urges without automatic reactivity. It trains "decoupling"â€”breaking the deep-seated neurological link between craving and action.
               </p>
             </div>
             <div className="bg-white p-3 rounded-xl border-2 border-blue-100">
@@ -274,7 +274,7 @@ export default function MindfulnessMethod() {
                   <button key={s.id} onClick={() => startSession(s)} className="w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white hover:border-brand shadow-sm active:scale-95 transition-all flex justify-between items-center group">
                      <div>
                         <h4 className="font-bold text-gray-900 text-sm group-hover:text-brand transition-colors">{s.title}</h4>
-                        <p className="text-xs text-gray-500 font-medium mt-0.5">{s.duration} min • Guided Text</p>
+                        <p className="text-xs text-gray-500 font-medium mt-0.5">{s.duration} min â€¢ Guided Text</p>
                      </div>
                      <div className="w-8 h-8 rounded-full bg-brand/10 flex items-center justify-center group-hover:bg-brand/20 transition-colors">
                         <Play className="w-4 h-4 text-brand fill-brand" />

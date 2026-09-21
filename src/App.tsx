@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -49,8 +49,8 @@ function MainApp() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
-        <div className="w-8 h-8 rounded-full border-4 border-brand border-t-transparent animate-spin"></div>
+      <div className="wellness-shell flex items-center justify-center h-screen">
+        <div className="w-10 h-10 rounded-full border-4 animate-spin" style={{ borderColor: '#2AA97E', borderTopColor: 'transparent' }}></div>
       </div>
     );
   }
@@ -93,16 +93,18 @@ function MainApp() {
 
       {/* Log Craving Bottom Sheet Overlay */}
       {activeTab === "log" && (
-        <div className="absolute inset-0 z-[100] bg-black/60 flex flex-col justify-end">
+        <div className="absolute inset-0 z-[100] bg-black/50 backdrop-blur-sm flex flex-col justify-end">
           <div
-            className="bg-white rounded-t-3xl border-t-2 border-gray-200 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] w-full h-[90vh] overflow-y-auto pt-6 animate-in slide-in-from-bottom"
+            className="rounded-t-[1.75rem] w-full h-[90vh] overflow-y-auto pt-6 animate-in slide-in-from-bottom"
+            style={{ background: 'linear-gradient(180deg,#FFFDF7,#FFF8EC)', boxShadow: '0 -12px 40px rgba(74,63,53,0.18)' }}
             onClick={(e) => e.stopPropagation()}
           >
             <LogPage setActiveTab={setActiveTab} />
           </div>
           <button
             onClick={() => setActiveTab("home")}
-            className="absolute top-4 right-4 text-white font-bold bg-black/50 p-2 rounded-full z-[110]"
+            className="absolute top-4 right-4 font-bold p-2 rounded-full z-[110]"
+            style={{ background: 'rgba(74,63,53,0.5)', color: '#fff', backdropFilter: 'blur(8px)' }}
           >
              Close
           </button>
@@ -118,13 +120,13 @@ function MainApp() {
             exit={{ opacity: 0, y: -20 }}
             className="fixed top-6 left-0 right-0 z-[200] flex justify-center px-4 pointer-events-none"
           >
-            <div className="bg-white border-2 border-brand-dark shadow-[0_4px_0_var(--color-brand-dark)] rounded-2xl p-4 flex items-center gap-3 w-full max-w-sm">
-               <div className="w-10 h-10 rounded-full bg-brand-surface flex items-center justify-center shrink-0">
-                 <CheckCircle2 className="w-6 h-6 text-brand" />
+            <div className="glass-card p-4 flex items-center gap-3 w-full max-w-sm" style={{ outline: '1.5px solid rgba(42,169,126,0.4)' }}>
+               <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: '#E7F6EE' }}>
+                 <CheckCircle2 className="w-6 h-6" style={{ color: '#1C7D5B' }} />
                </div>
                <div>
-                  <h4 className="font-bold text-gray-900 text-sm">Inhaler Logged!</h4>
-                  <p className="text-xs text-brand font-bold uppercase tracking-wider">Breathe Smart Inhaler by Noconi</p>
+                  <h4 className="font-bold text-sm" style={{ color: '#4A3F35' }}>Inhaler Logged!</h4>
+                  <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1C7D5B' }}>Breathe Smart Inhaler by Noconi</p>
                </div>
             </div>
           </motion.div>

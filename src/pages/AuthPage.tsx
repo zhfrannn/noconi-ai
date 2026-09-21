@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { HeartPulse, Chrome } from 'lucide-react';
@@ -57,7 +57,7 @@ export function AuthPage() {
   };
 
   return (
-    <div className="w-full min-h-[100dvh] max-w-md mx-auto bg-gray-50 flex flex-col relative sm:border-x border-gray-200 justify-between py-6">
+    <div className="wellness-shell w-full min-h-[100dvh] max-w-md mx-auto flex flex-col relative sm:border-x sm:border-[#EADDC8] justify-between py-6">
       {/* Top Bar with Language Selector */}
       <div className="w-full px-6 flex justify-end items-center">
         <LanguageToggle variant="compact" />

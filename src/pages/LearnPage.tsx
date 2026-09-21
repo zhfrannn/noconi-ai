@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+﻿import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useAppContext } from '../store/AppContext';
 import { BookOpen, PlayCircle, Lightbulb, Bookmark, ArrowLeft, Share2, CheckCircle2, ThumbsUp, Heart, Share, ChevronRight, Activity, Brain } from 'lucide-react';
 import { differenceInDays } from 'date-fns';
@@ -69,7 +69,7 @@ export function LearnPage() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50/50 pb-24 overflow-y-auto w-full relative">
+    <div className="flex flex-col h-full bg-transparent pb-24 overflow-y-auto w-full relative">
       <header className="p-4 pt-6 bg-white border-b border-gray-200 sticky top-0 z-10">
          <div className="mb-4">
             <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -192,7 +192,7 @@ const ListCard: React.FC<{ content: LearnContent, isBookmarked: boolean, isRead:
             {content.type === 'Doctor Talks' ? (
                <div className="flex items-center gap-1 mb-2 text-xs font-medium text-gray-600">
                   <div className="w-4 h-4 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold text-[8px]">DR</div>
-                  <span>{content.doctorName} • {content.doctorSpecialty?.split(' ')[0]}</span>
+                  <span>{content.doctorName} â€¢ {content.doctorSpecialty?.split(' ')[0]}</span>
                </div>
             ) : content.type === 'Story' ? (
                <div className="mb-2 text-xs font-medium text-gray-600 line-clamp-1">
@@ -244,7 +244,7 @@ function StoryPage({ content, onBack }: { content: LearnContent, onBack: () => v
                <h1 className="text-2xl font-bold leading-tight text-gray-900">{content.title}</h1>
                <div className="flex flex-col gap-1 text-xs font-bold text-gray-500 border-l-2 border-brand pl-3">
                   <span className="text-gray-800">{content.authorName}</span>
-                  <span>Smoked {content.yearsSmoking} yr • Used {content.quitMethod}</span>
+                  <span>Smoked {content.yearsSmoking} yr â€¢ Used {content.quitMethod}</span>
                </div>
             </header>
 

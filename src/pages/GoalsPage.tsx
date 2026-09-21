@@ -1,4 +1,4 @@
-import { useAppContext } from '../store/AppContext';
+﻿import { useAppContext } from '../store/AppContext';
 import { Target, Trophy, Award, TrendingDown, Clock, CheckCircle } from 'lucide-react';
 import { differenceInDays, differenceInWeeks } from 'date-fns';
 import { useLanguage } from '../contexts/LanguageContext';

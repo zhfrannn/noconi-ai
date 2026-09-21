@@ -1,6 +1,15 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Custom display font — used for H1 (bold) and H2 (regular) */
+@font-face {
+  font-family: 'Noconi Display';
+  src: url('./assets/fonts/NoconiDisplay.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer utilities {
   @media print {
     .print-hidden {
@@ -10,13 +19,14 @@
 }
 
 @theme {
-  --color-brand: #22a074;
-  --color-brand-dark: #198059;
-  --color-brand-light: #2bc088;
-  --color-brand-surface: #e9f6f1;
-  --color-duo-green: #22a074; /* Alias for compatibility */
-  --color-duo-green-dark: #198059;
-  --color-duo-green-light: #2bc088;
+  /* ——— Preserved core (logic-safe) ——— */
+  --color-brand: #2aa97e;
+  --color-brand-dark: #1c7d5b;
+  --color-brand-light: #4cc39a;
+  --color-brand-surface: #e7f6ee;
+  --color-duo-green: #2aa97e;
+  --color-duo-green-dark: #1c7d5b;
+  --color-duo-green-light: #4cc39a;
   --color-duo-blue: #1cb0f6;
   --color-duo-blue-dark: #1899d6;
   --color-duo-orange: #ff9600;
@@ -25,7 +35,31 @@
   --color-duo-yellow-dark: #cc9f00;
   --color-duo-red: #ff4b4b;
   --color-duo-red-dark: #cc3c3c;
-  --font-sans: 'Google Sans', system-ui, sans-serif;
+
+  /* ——— Dikta-inspired wellness tokens ——— */
+  --color-cream: #fff8ec;
+  --color-cream-deep: #fdf0d8;
+  --color-cream-card: #fffdf7;
+  --color-leaf: #2aa97e;
+  --color-leaf-deep: #1c7d5b;
+  --color-leaf-soft: #dcf2e5;
+  --color-sun: #ffc531;
+  --color-sun-soft: #fff1c4;
+  --color-sun-deep: #b97e0c;
+  --color-sky: #7cc8f5;
+  --color-sky-soft: #e3f3fd;
+  --color-peach: #ff9e6b;
+  --color-peach-soft: #ffe9db;
+  --color-cocoa: #4a3f35;
+  --color-cocoa-soft: #8a7a6b;
+  --color-cocoa-faint: #b8a99a;
+
+  --font-sans: 'Inter', 'Google Sans', system-ui, sans-serif;
+  --font-display: 'Noconi Display', 'Inter', system-ui, sans-serif;
+
+  --shadow-wellness: 0 10px 30px rgba(74, 63, 53, 0.08), 0 2px 8px rgba(74, 63, 53, 0.06);
+  --shadow-wellness-press: 0 2px 8px rgba(74, 63, 53, 0.08);
+  --radius-wellness: 1.5rem;
 }
 
 @layer utilities {
@@ -35,82 +69,159 @@
   }
   .no-scrollbar,
   * {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
+
+  /* Soft press — calm, encouraging feedback */
+  .press-soft {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  }
+  .press-soft:active {
+    transform: scale(0.975) translateY(1px);
+  }
+
   .bg-brand-3d {
-    background-color: var(--color-brand) !important;
-    box-shadow: 0 4px 0 var(--color-brand-dark) !important;
-    border: none !important;
+    background: linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-light) 100%) !important;
+    box-shadow: 0 6px 0 var(--color-brand-dark), 0 12px 24px rgba(42, 169, 126, 0.25) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
   }
-  
-  /* Apply Duolingo card styling to all white rounded elements */
+
+  /* Legacy class — restyled into soft glass wellness card (no logic change) */
   .bg-white.rounded-xl,
   .bg-white.rounded-2xl,
   .bg-white.rounded-3xl {
-    border: 2px solid #E5E7EB;
-    box-shadow: 0 4px 0 #E5E7EB;
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    outline: 1px solid rgba(74, 63, 53, 0.06);
+    box-shadow: var(--shadow-wellness);
   }
-  
-  /* Make clickable white rounded elements bouncy */
+
   button.bg-white.rounded-xl:active,
   button.bg-white.rounded-2xl:active,
   button.bg-white.rounded-3xl:active,
   .cursor-pointer.bg-white.rounded-xl:active,
   .cursor-pointer.bg-white.rounded-2xl:active,
   .cursor-pointer.bg-white.rounded-3xl:active {
-    transform: translateY(4px);
-    box-shadow: 0 0px 0 #E5E7EB !important;
+    transform: scale(0.98) translateY(2px);
+    box-shadow: var(--shadow-wellness-press) !important;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply text-white font-bold py-3 px-5 flex items-center justify-center gap-2 transition-transform bg-brand cursor-pointer select-none border-2 border-brand-dark rounded-xl;
-    box-shadow: 0 4px 0 var(--color-brand-dark);
+    @apply text-white font-bold py-3 px-5 flex items-center justify-center gap-2 cursor-pointer select-none rounded-2xl;
+    background: linear-gradient(135deg, var(--color-leaf) 0%, #35bd8d 100%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    outline: 2px solid var(--color-leaf-deep);
+    outline-offset: -2px;
+    box-shadow: 0 5px 0 var(--color-leaf-deep), 0 12px 24px rgba(42, 169, 126, 0.28);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .btn-primary:active, .btn-primary[data-pressed="true"] {
-    transform: translateY(4px);
-    box-shadow: 0 0px 0 var(--color-brand-dark);
+    transform: translateY(4px) scale(0.99);
+    box-shadow: 0 1px 0 var(--color-leaf-deep);
   }
   .btn-outline {
-    @apply bg-white text-gray-500 font-bold py-3 px-5 border-2 border-gray-200 flex items-center justify-center gap-2 transition-transform cursor-pointer select-none rounded-xl;
-    box-shadow: 0 4px 0 #E5E7EB;
+    @apply bg-white/90 font-semibold py-3 px-5 flex items-center justify-center gap-2 cursor-pointer select-none rounded-2xl;
+    color: var(--color-cocoa);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    outline: 1.5px solid rgba(74, 63, 53, 0.1);
+    box-shadow: var(--shadow-wellness);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .btn-outline:active, .btn-outline[data-pressed="true"] {
-    transform: translateY(4px);
-    box-shadow: 0 0px 0 #E5E7EB;
+    transform: translateY(2px) scale(0.99);
+    box-shadow: var(--shadow-wellness-press);
   }
   .btn-outline-active {
-    @apply bg-brand-surface text-brand font-bold py-3 px-5 border-2 border-brand flex items-center justify-center gap-2 transition-transform cursor-pointer select-none rounded-xl;
-    box-shadow: 0 4px 0 var(--color-brand-dark);
+    @apply font-bold py-3 px-5 flex items-center justify-center gap-2 cursor-pointer select-none rounded-2xl;
+    background: var(--color-leaf-soft);
+    color: var(--color-leaf-deep);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    outline: 1.5px solid var(--color-leaf);
+    box-shadow: 0 5px 0 rgba(28, 125, 91, 0.25);
   }
   .btn-outline-active:active, .btn-outline-active[data-pressed="true"] {
-    transform: translateY(4px);
-    box-shadow: 0 0px 0 var(--color-brand-dark);
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 rgba(28, 125, 91, 0.25);
   }
+
+  /* Wellness glass card — layered premium surface */
   .card-duo {
-    @apply p-4 bg-white border-2 border-gray-200 rounded-2xl;
-    box-shadow: 0 4px 0 #E5E7EB;
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    @apply p-4 rounded-3xl relative overflow-hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, var(--color-cream-card) 60%, #fff6e3 100%);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    outline: 1px solid rgba(74, 63, 53, 0.07);
+    box-shadow: var(--shadow-wellness), inset 0 1px 0 rgba(255,255,255,0.9);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .card-duo.cursor-pointer:active {
-    transform: translateY(4px);
-    box-shadow: 0 0px 0 #E5E7EB !important;
+    transform: scale(0.985) translateY(2px);
+    box-shadow: var(--shadow-wellness-press) !important;
   }
   .card-duo-active {
-    @apply p-4 bg-brand-surface border-2 border-brand rounded-2xl;
-    box-shadow: 0 4px 0 var(--color-brand-dark);
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    @apply p-4 rounded-3xl relative overflow-hidden;
+    background: linear-gradient(180deg, #f2fbf5 0%, var(--color-brand-surface) 100%);
+    border: 1px solid rgba(255,255,255,0.9);
+    outline: 1.5px solid var(--color-leaf);
+    box-shadow: 0 8px 20px rgba(42,169,126,0.18), inset 0 1px 0 rgba(255,255,255,0.9);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
   .card-duo-active.cursor-pointer:active {
-    transform: translateY(4px);
-    box-shadow: 0 0px 0 var(--color-brand-dark) !important;
+    transform: scale(0.985) translateY(2px);
   }
   .icon-solid {
-    @apply flex items-center justify-center text-white shrink-0 bg-brand rounded-xl border-2 border-brand-dark;
-    box-shadow: 0 4px 0 var(--color-brand-dark);
+    @apply flex items-center justify-center text-white shrink-0 rounded-2xl;
+    background: linear-gradient(135deg, var(--color-leaf) 0%, #35bd8d 100%);
+    border: 1px solid rgba(255,255,255,0.4);
+    outline: 1.5px solid var(--color-leaf-deep);
+    outline-offset: -1.5px;
+    box-shadow: 0 3px 0 var(--color-leaf-deep), 0 8px 16px rgba(42,169,126,0.22);
+  }
+
+  /* Dikta wellness shell & glass primitives */
+  .wellness-shell {
+    background-color: #dff2fe;
+    background-image:
+      linear-gradient(180deg, #bde5fc 0%, #d8f1fe 14%, rgba(230, 246, 255, 0.75) 30%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%),
+      url('./assets/bg/noconi-bg.png');
+    background-size: 100% auto, cover;
+    background-position: top center, center top;
+    background-repeat: no-repeat, no-repeat;
+  }
+  /* Halaman yang kontennya scroll — transparan, latar dari shell di belakangnya */
+  .wellness-page {
+    background: transparent;
+  }
+  .glass-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.88));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255,255,255,0.95);
+    outline: 1px solid rgba(42,169,126,0.08);
+    box-shadow: 0 14px 34px -6px rgba(28,95,65,0.08), 0 4px 14px -2px rgba(28,95,65,0.04), inset 0 1px 0 #fff;
+    border-radius: 1.75rem;
+  }
+
+  .dikta-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.90) 100%);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1.5px solid rgba(255, 255, 255, 0.95);
+    box-shadow: 0 16px 36px -6px rgba(24, 76, 50, 0.09), 0 4px 14px -2px rgba(24, 76, 50, 0.04), inset 0 1px 0 rgba(255, 255, 255, 1);
+    border-radius: 1.75rem;
+  }
+
+  .dikta-pill {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 12px rgba(24, 76, 50, 0.05), inset 0 1px 0 #fff;
+    border-radius: 9999px;
+  }
+
+  .dikta-squircle {
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.85);
   }
 }
 
@@ -119,13 +230,122 @@
   50% { transform: translateY(-10%); }
   100% { transform: translateY(20%); }
 }
-
-.animate-wave {
-  animation: wave 4s ease-in-out infinite alternate;
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.04); opacity: 1; }
+}
+
+.animate-wave { animation: wave 4s ease-in-out infinite alternate; }
+.animate-float-soft { animation: float-soft 5s ease-in-out infinite; }
+.animate-breathe { animation: breathe 4s ease-in-out infinite; }
 
 body {
-  font-family: 'Google Sans', system-ui, sans-serif;
-  color: #374151;
-  background-color: #fafafa;
+  font-family: 'Inter', 'Google Sans', system-ui, sans-serif;
+  color: var(--color-cocoa);
+  background-color: var(--color-cream);
+  background-image: url('./assets/bg/noconi-bg.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* ————————————————— TYPE HIERARCHY (single source of truth) —————————————————
+   H1  : Noconi Display bold 28px   — satu per layar
+   H2  : Noconi Display regular 20px — judul kartu/section
+   H3  : Inter bold 16px            — sub-judul dalam kartu
+   BODY: Inter regular 14px
+   LABEL: Inter semibold 12px, uppercase+tracking HANYA di sini
+   Angka besar: display bold, dipakai di stat hero saja
+*/
+h1, .h1 {
+  font-family: 'Noconi Display', 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.75rem; /* 28px */
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-cocoa);
+}
+h2, .h2 {
+  font-family: 'Noconi Display', 'Inter', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--color-cocoa);
+}
+.h3 {
+  font-weight: 700;
+  font-size: 1rem; /* 16px */
+  line-height: 1.3;
+  color: var(--color-cocoa);
+}
+.body {
+  font-weight: 400;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.55;
+  color: var(--color-cocoa-soft);
+}
+.label {
+  font-weight: 600;
+  font-size: 0.75rem; /* 12px */
+  color: var(--color-cocoa-soft);
+}
+.eyebrow {
+  font-weight: 700;
+  font-size: 0.6875rem; /* 11px */
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-cocoa-faint);
+}
+.font-display { font-family: 'Noconi Display', 'Inter', system-ui, sans-serif; }
+
+/* Stat angka besar — hanya untuk hero stat */
+.stat-hero {
+  font-family: 'Noconi Display', 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 3rem; /* 48px */
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-cocoa);
+}
+
+/* ————————————————— GLOBAL HARMONIZATION LAYER —————————————————
+   Layar yang belum dikonversi manual tetap tampil hangat & konsisten.
+   Ini menimpa sisa gaya abu-abu lama agar tidak ada dua bahasa visual.
+*/
+main, main * {
+  border-color: rgba(74, 63, 53, 0.1);
+}
+
+/* Sisa background solid menutupi gambar — jadikan transparan */
+main .bg-gray-50\/50,
+main [class*="bg-gray-50/"] {
+  background-color: transparent;
+}
+
+/* Teks: semua sisa gray Tailwind dipetakan ke palet hangat */
+main .text-gray-900, main .text-gray-800 { color: var(--color-cocoa); }
+main .text-gray-700 { color: var(--color-cocoa); }
+main .text-gray-600, main .text-gray-500 { color: var(--color-cocoa-soft); }
+main .text-gray-400, main .text-gray-300 { color: var(--color-cocoa-faint); }
+main .text-gray-200 { color: var(--color-cream-deep); }
+
+/* Bidang: sisa bg putih/abu jadi permukaan krem */
+main .bg-white { background-color: var(--color-cream-card); }
+main .bg-gray-50 { background-color: #FBF4E4; }
+main .bg-gray-100 { background-color: rgba(74, 63, 53, 0.06); }
+main .bg-gray-200 { background-color: #EADDC8; }
+
+/* Font weights di sisa layar lama: tanpa hierarki berlebihan */
+main .font-black { font-weight: 700; }
+main .font-extrabold { font-weight: 700; }
+
+/* Progress bar & track seragam */
+main .bg-brand { background-color: var(--color-leaf); }

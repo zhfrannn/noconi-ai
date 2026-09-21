@@ -30,12 +30,34 @@ export default function MethodPage() {
     setShowChangeMethod(false);
   };
 
+  // Friendly label for the active method
+  const methodBadgeMap: Record<string, string> = {
+    cbt: 'CBT Focus',
+    act: 'ACT Focus',
+    mindfulness: 'Mindfulness Focus',
+    mi: 'MI Focus',
+    habit: 'Habit Focus',
+  };
+  const activeBadge = methodBadgeMap[method] || 'Core Focus';
+
   return (
-    <div className="flex-1 overflow-y-auto bg-gray-50/50 pb-24 relative">
-      <div className="absolute top-4 right-4 z-10">
-         <button onClick={() => setShowChangeMethod(true)} className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl text-xs font-bold text-gray-600 border-2 border-gray-200 flex items-center gap-1.5 hover:border-gray-300 transition-colors shadow-sm cursor-pointer" style={{boxShadow: '0 2px 0 #E5E7EB'}}>
-            <RefreshCcw className="w-3 h-3" /> {t.methods.changeMethod}
-         </button>
+    <div className="flex-1 overflow-y-auto bg-transparent pb-24 relative flex flex-col">
+      {/* Inline header bar — no absolute positioning, zero overlap */}
+      <div className="flex items-center justify-between px-4 pt-4 pb-1 shrink-0">
+        <div
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold"
+          style={{ background: 'rgba(42,169,126,0.12)', color: '#1C7D5B', border: '1px solid rgba(42,169,126,0.2)' }}
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[#2AA97E] animate-pulse" />
+          {activeBadge}
+        </div>
+        <button
+          onClick={() => setShowChangeMethod(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold cursor-pointer transition-colors"
+          style={{ background: 'rgba(255,255,255,0.9)', color: '#6B7280', border: '1px solid #E5E7EB', boxShadow: '0 2px 0 #E5E7EB' }}
+        >
+          <RefreshCcw className="w-3 h-3" /> {t.methods.changeMethod}
+        </button>
       </div>
 
       {method === 'cbt' && <CBTMethod />}

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import { useAppContext } from '../store/AppContext';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ReferenceLine } from 'recharts';
 import { format, subDays, differenceInDays } from 'date-fns';
@@ -264,7 +264,7 @@ export function AnalyticsPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gray-50/50 pb-24 overflow-y-auto w-full relative">
+    <div className="flex flex-col h-full bg-transparent pb-24 overflow-y-auto w-full relative">
       <header className="p-3 pt-8 bg-white border-b border-gray-100 flex justify-between items-center sticky top-0 z-10 print-hidden">
         <div>
            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">

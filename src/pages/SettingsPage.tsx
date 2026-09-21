@@ -1,4 +1,4 @@
-import { useAppContext } from '../store/AppContext';
+﻿import { useAppContext } from '../store/AppContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Settings, Bluetooth, Bell, User, LogOut, Trash2, Trophy, Flame, Globe } from 'lucide-react';
 import { NotificationSettings } from '../lib/db';
@@ -110,14 +110,14 @@ export function SettingsPage() {
 
       {/* Preferences */}
       <section className="card-duo overflow-hidden p-0 mb-6 bg-white shadow-sm border-2 border-gray-100">
-        <div className="p-4 border-b-2 border-gray-100 flex items-center gap-3 bg-gray-50/50">
+        <div className="p-4 border-b-2 border-gray-100 flex items-center gap-3 bg-transparent">
           <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center border-2 border-blue-200">
              <Bell className="w-4 h-4 text-blue-600" />
           </div>
           <h3 className="font-bold text-gray-900">{t.settings.notificationsSection}</h3>
         </div>
         
-        <div className="p-4 flex items-center justify-between border-b-2 border-gray-100 cursor-pointer hover:bg-gray-50/50 active:bg-gray-100 transition-colors" onClick={() => handleToggle('peakWarning')}>
+        <div className="p-4 flex items-center justify-between border-b-2 border-gray-100 cursor-pointer hover:bg-transparent active:bg-gray-100 transition-colors" onClick={() => handleToggle('peakWarning')}>
            <div>
              <h4 className="font-bold text-sm text-gray-900">{t.settings.peakWarning}</h4>
              <p className="text-xs text-gray-500 font-medium max-w-[220px] mt-0.5">{t.settings.peakWarningDesc}</p>
@@ -127,7 +127,7 @@ export function SettingsPage() {
            </div>
         </div>
 
-        <div className="p-4 flex items-center justify-between border-b-2 border-gray-100 cursor-pointer hover:bg-gray-50/50 active:bg-gray-100 transition-colors" onClick={() => handleToggle('streakCheckpoint')}>
+        <div className="p-4 flex items-center justify-between border-b-2 border-gray-100 cursor-pointer hover:bg-transparent active:bg-gray-100 transition-colors" onClick={() => handleToggle('streakCheckpoint')}>
            <div>
              <h4 className="font-bold text-sm text-gray-900">{t.settings.streakCheckpoint}</h4>
              <p className="text-xs text-gray-500 font-medium max-w-[220px] mt-0.5">{t.settings.streakCheckpointDesc}</p>
@@ -137,7 +137,7 @@ export function SettingsPage() {
            </div>
         </div>
         
-        <div className="p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50/50 active:bg-gray-100 transition-colors" onClick={() => handleToggle('aiCheckIn')}>
+        <div className="p-4 flex items-center justify-between cursor-pointer hover:bg-transparent active:bg-gray-100 transition-colors" onClick={() => handleToggle('aiCheckIn')}>
            <div>
              <h4 className="font-bold text-sm text-gray-900">{t.settings.aiCheckIn}</h4>
              <p className="text-xs text-gray-500 font-medium max-w-[220px] mt-0.5">{t.settings.aiCheckInDesc}</p>

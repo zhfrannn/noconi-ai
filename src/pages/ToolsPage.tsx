@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Calculator, Waves, Wind, Play, HelpCircle, Activity, ChevronRight, Pause, Heart, ThumbsUp } from 'lucide-react';
 import { useAppContext } from '../store/AppContext';
 import { cn } from '../lib/utils';
@@ -11,7 +11,7 @@ export function ToolsPage({ setActiveTab }: { setActiveTab: (tab: any) => void }
   const [activeSubPage, setActiveSubPage] = useState<SubPage>('list');
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="wellness-page flex flex-col h-full">
       {activeSubPage === 'list' && <ToolsList setPage={setActiveSubPage} />}
       {activeSubPage === 'calculator' && <RokokCalculator setPage={setActiveSubPage} setActiveTab={setActiveTab} />}
       {activeSubPage === 'surfer' && <CravingSurfer setPage={setActiveSubPage} />}
@@ -28,44 +28,51 @@ function ToolsList({ setPage }: { setPage: (page: SubPage) => void }) {
       title: 'Rokok Calculator',
       description: 'What Did You Burn Today? Calculate the real cost of your cigarettes.',
       icon: Calculator,
-      color: 'bg-brand-surface text-brand-dark border-brand/30'
+      accent: 'leaf' as const
     },
     {
       id: 'surfer',
       title: 'Craving Surfer',
       description: 'Hold For 3 Minutes, Win A Round. Craving distraction game.',
       icon: Waves,
-      color: 'bg-cyan-50 text-cyan-600 border-cyan-200'
+      accent: 'sky' as const
     },
     {
       id: 'lung_age',
       title: 'Lung Age Test',
       description: 'Paru-Parumu Setua Apa? Cek estimasi usia biologis paru-parumu.',
       icon: Wind,
-      color: 'bg-brand-surface text-brand-dark border-brand/30'
+      accent: 'leaf' as const
     }
   ];
 
   return (
     <div className="p-4 pt-12">
-      <h1 className="text-3xl font-extrabold text-gray-900 mb-2">{t.tools.title}</h1>
-      <p className="text-gray-500 font-medium mb-8">{t.tools.subtitle}</p>
-      
+      <h1 className="text-3xl font-display font-bold mb-1" style={{ color: '#4A3F35' }}>{t.tools.title}</h1>
+      <p className="font-semibold mb-8" style={{ color: '#8A7A6B' }}>{t.tools.subtitle}</p>
+
       <div className="flex flex-col gap-4">
         {tools.map(tool => (
           <button
             key={tool.id}
             onClick={() => setPage(tool.id as SubPage)}
-            className="bg-white rounded-3xl p-3 hover:shadow-md flex items-center gap-4 text-left transition-all group"
+            className="glass-card press-soft p-4 flex items-center gap-4 text-left cursor-pointer group"
           >
-            <div className="icon-solid w-14 h-14">
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shrink-0 group-active:scale-95 transition-transform"
+              style={
+                tool.accent === 'sky'
+                  ? { background: 'linear-gradient(135deg,#3FA9E8,#8ED2F8)', boxShadow: '0 5px 12px rgba(63,169,232,0.35)' }
+                  : { background: 'linear-gradient(135deg,#2AA97E,#4CC39A)', boxShadow: '0 5px 12px rgba(42,169,126,0.3)' }
+              }
+            >
               <tool.icon className="w-6 h-6 text-white" strokeWidth={2.5} />
             </div>
             <div className="flex-1">
-              <h3 className="font-extrabold text-gray-900 text-lg mb-1">{tool.title}</h3>
-              <p className="text-sm text-gray-500 font-medium leading-snug">{tool.description}</p>
+              <h3 className="font-display font-bold text-lg mb-1" style={{ color: '#4A3F35' }}>{tool.title}</h3>
+              <p className="text-sm font-semibold leading-snug" style={{ color: '#8A7A6B' }}>{tool.description}</p>
             </div>
-            <ChevronRight className="w-6 h-6 text-gray-300 group-hover:text-brand transition-colors" />
+            <ChevronRight className="w-6 h-6" style={{ color: '#D9CBB8' }} />
           </button>
         ))}
       </div>
@@ -109,7 +116,7 @@ function RokokCalculator({ setPage, setActiveTab }: { setPage: (p: SubPage) => v
         {/* ZONA INPUT */}
         <div className="bg-white rounded-3xl p-3 space-y-6">
           <div>
-             <label className="block font-extrabold text-gray-900 mb-2">Cigarettes per day</label>
+             <label className="block font-bold text-gray-900 mb-2">Cigarettes per day</label>
              <div className="flex items-center gap-4">
                 <input 
                   type="range" 
@@ -122,7 +129,7 @@ function RokokCalculator({ setPage, setActiveTab }: { setPage: (p: SubPage) => v
              </div>
           </div>
           <div>
-             <label className="block font-extrabold text-gray-900 mb-2">Harga Dream Item-mu (Rp)</label>
+             <label className="block font-bold text-gray-900 mb-2">Harga Dream Item-mu (Rp)</label>
              <input 
                 type="number"
                 value={dreamItemPrice}
@@ -160,7 +167,7 @@ function RokokCalculator({ setPage, setActiveTab }: { setPage: (p: SubPage) => v
                  <Target className="w-6 h-6 text-brand-dark" />
                </div>
                <div>
-                 <h4 className="font-extrabold text-gray-900 mb-1">Countdown ke Mimpimu</h4>
+                 <h4 className="font-bold text-gray-900 mb-1">Countdown ke Mimpimu</h4>
                  <p className="text-brand-dark text-sm font-medium leading-relaxed">
                    If you stop today, in <strong className="font-bold text-lg bg-white px-2 py-0.5 rounded-lg mx-1 shadow-sm border border-brand/30">{daysToDream} days</strong> you can buy that Dream Item with your saved money.
                  </p>
@@ -174,7 +181,7 @@ function RokokCalculator({ setPage, setActiveTab }: { setPage: (p: SubPage) => v
                  <Activity className="w-6 h-6 text-red-400" />
                </div>
                <div>
-                 <h4 className="font-extrabold text-white mb-1">Waktu Hidup Terbakar</h4>
+                 <h4 className="font-bold text-white mb-1">Waktu Hidup Terbakar</h4>
                  <p className="text-gray-300 text-sm font-medium leading-relaxed">
                    Today you burned <strong className="text-red-400">{lostLifeMinutes} minutes</strong> of your life. 
                    Since you started smoking ({baseYears} years ago), a total of <strong className="text-red-400">{totalLostLifeHours} hours</strong> have been lost.
@@ -189,7 +196,7 @@ function RokokCalculator({ setPage, setActiveTab }: { setPage: (p: SubPage) => v
                  <Heart className="w-6 h-6 text-green-600" />
                </div>
                <div>
-                 <h4 className="font-extrabold text-gray-900 mb-1">Konversi Relatable</h4>
+                 <h4 className="font-bold text-gray-900 mb-1">Konversi Relatable</h4>
                  <p className="text-green-800 text-sm font-medium leading-relaxed">
                    Your yearly cigarette cost = <strong>{relatableMeal} Good Meals</strong>, <strong>{relatableGas} Liters of Gas</strong>, or <strong>{relatableNetflix} Months of Netflix Premium</strong>.
                  </p>
@@ -202,7 +209,7 @@ function RokokCalculator({ setPage, setActiveTab }: { setPage: (p: SubPage) => v
       <div className="fixed bottom-0 inset-x-0 p-4 max-w-md mx-auto bg-gradient-to-t from-gray-50 via-gray-50 pointer-events-none">
         <button 
           onClick={() => setActiveTab('settings')} // Can point to onboarding re-run or goals
-          className="w-full pointer-events-auto bg-gray-900 text-white font-extrabold text-lg py-4 rounded-2xl shadow-lg border-b-4 border-black active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center gap-2"
+          className="w-full pointer-events-auto bg-gray-900 text-white font-bold text-lg py-4 rounded-2xl shadow-lg border-b-4 border-black active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center gap-2"
         >
           Mulai Hitung Dari Nol <ArrowRight className="w-5 h-5"/>
         </button>
@@ -271,7 +278,7 @@ function CravingSurfer({ setPage }: { setPage: (p: SubPage) => void }) {
           <ArrowLeft className="w-6 h-6" />
         </button>
         <Waves className="w-20 h-20 text-cyan-400 mb-6" strokeWidth={1.5} />
-        <h2 className="text-3xl font-extrabold text-white mb-4">Craving Surfer</h2>
+        <h2 className="text-3xl font-bold text-white mb-4">Craving Surfer</h2>
         <p className="text-cyan-100 font-medium text-lg leading-relaxed mb-12">
           Cravings are like waves. They rise to a peak, then subside on their own within 3 minutes.
         </p>
@@ -291,19 +298,19 @@ function CravingSurfer({ setPage }: { setPage: (p: SubPage) => void }) {
         <div className="bg-green-100 p-4 rounded-full mb-6">
           <ThumbsUp className="w-16 h-16 text-green-600" />
         </div>
-        <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Ombaknya Lewat.</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2">Ombaknya Lewat.</h2>
         <p className="text-gray-500 font-medium text-lg mb-12">You made it past 3 minutes. How do you feel now?</p>
         
         <div className="flex flex-col gap-4 w-full">
           <button 
             onClick={() => handleFinish(false)}
-            className="w-full bg-gray-900 text-white font-extrabold text-lg py-4 rounded-2xl shadow-sm border-b-[4px] border-black active:translate-y-1 active:border-b-0 transition-all"
+            className="w-full bg-gray-900 text-white font-bold text-lg py-4 rounded-2xl shadow-sm border-b-[4px] border-black active:translate-y-1 active:border-b-0 transition-all"
           >
             Craving Hilang, Aku Aman
           </button>
           <button 
             onClick={() => handleFinish(true)}
-            className="w-full bg-white text-gray-900 font-extrabold text-lg py-4 rounded-2xl active:translate-y-1 active:border-b-2 transition-all"
+            className="w-full bg-white text-gray-900 font-bold text-lg py-4 rounded-2xl active:translate-y-1 active:border-b-2 transition-all"
           >
             Masih Kepikiran (Surf 1 Ronde Lagi)
           </button>
@@ -407,7 +414,7 @@ function BreathingGame() {
         )}></div>
       </div>
       <div className="text-center">
-        <h3 className="text-3xl font-extrabold tracking-widest text-cyan-200 mb-2">{phase.toUpperCase()}</h3>
+        <h3 className="text-3xl font-bold tracking-widest text-cyan-200 mb-2">{phase.toUpperCase()}</h3>
         <p className="text-gray-400 font-medium">Ikuti ritme lingkaran. Fokus ke napasmu.</p>
       </div>
     </div>
@@ -536,7 +543,7 @@ function LungAgeTest({ setPage, setActiveTab }: { setPage: (p: SubPage) => void,
     return (
       <div className="flex flex-col h-full bg-gray-50 overflow-y-auto no-scrollbar">
         <div className="p-4 pb-32">
-           <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-8 mt-4">Hasil Analisa</h2>
+           <h2 className="text-3xl font-bold text-gray-900 text-center mb-8 mt-4">Hasil Analisa</h2>
            
            <div className="flex gap-4 items-center justify-center mb-10">
               <div className="text-center">
@@ -567,13 +574,13 @@ function LungAgeTest({ setPage, setActiveTab }: { setPage: (p: SubPage) => void,
              <div className="bg-brand-surface rounded-3xl p-3 border-2 border-brand/20 flex items-start gap-4">
                <div className="bg-brand/10 p-2 rounded-xl text-brand-dark"><Target className="w-5 h-5"/></div>
                <div>
-                  <h4 className="font-extrabold text-brand-dark mb-1">Kabar Baiknya</h4>
+                  <h4 className="font-bold text-brand-dark mb-1">Kabar Baiknya</h4>
                   <p className="text-brand-dark text-sm font-medium leading-snug">If you stop today, your Lung Age could improve to an estimated <strong>{Math.round(answers.age + (diff*0.4))} years</strong> within a year! Lungs can clean themselves.</p>
                </div>
              </div>
 
              <div className="bg-white rounded-3xl p-3">
-                <h4 className="font-extrabold text-gray-900 mb-4">Timeline Pemulihan Paru</h4>
+                <h4 className="font-bold text-gray-900 mb-4">Timeline Pemulihan Paru</h4>
                 <div className="space-y-4 relative before:absolute before:inset-0 before:ml-2.5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
                    <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                      <div className="flex items-center justify-center w-6 h-6 rounded-full border-4 border-white bg-green-500 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2"></div>
@@ -604,7 +611,7 @@ function LungAgeTest({ setPage, setActiveTab }: { setPage: (p: SubPage) => void,
         <div className="fixed bottom-0 inset-x-0 p-4 max-w-md mx-auto bg-gradient-to-t from-gray-50 via-gray-50 pointer-events-none">
           <button 
             onClick={() => setActiveTab('settings')} 
-            className="w-full pointer-events-auto bg-brand text-white font-extrabold text-lg py-4 rounded-2xl shadow-lg border-b-4 border-brand-dark active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center gap-2"
+            className="w-full pointer-events-auto bg-brand text-white font-bold text-lg py-4 rounded-2xl shadow-lg border-b-4 border-brand-dark active:translate-y-1 active:border-b-0 transition-all flex items-center justify-center gap-2"
           >
             Track Your Recovery <ArrowRight className="w-5 h-5"/>
           </button>
@@ -696,7 +703,7 @@ function LungAgeTest({ setPage, setActiveTab }: { setPage: (p: SubPage) => void,
 
       <div className="p-4 flex-1 flex flex-col justify-center pb-24">
         <div className="mb-10 text-center animate-in slide-in-from-right fade-in duration-300" key={step}>
-           <h2 className="text-3xl font-extrabold text-gray-900 mb-2">{questions[step].title}</h2>
+           <h2 className="text-3xl font-bold text-gray-900 mb-2">{questions[step].title}</h2>
            <p className="text-gray-500 font-medium">{questions[step].desc}</p>
         </div>
 
@@ -709,7 +716,7 @@ function LungAgeTest({ setPage, setActiveTab }: { setPage: (p: SubPage) => void,
         <div className="p-4">
           <button 
             onClick={handleNext}
-            className="w-full bg-gray-900 text-white font-extrabold text-lg py-5 rounded-2xl shadow-sm border-b-[4px] border-black active:translate-y-1 active:border-b-0 transition-all flex justify-center items-center gap-2"
+            className="w-full bg-gray-900 text-white font-bold text-lg py-5 rounded-2xl shadow-sm border-b-[4px] border-black active:translate-y-1 active:border-b-0 transition-all flex justify-center items-center gap-2"
           >
             Lanjut <ArrowRight className="w-5 h-5"/>
           </button>

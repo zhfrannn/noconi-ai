@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ShoppingCart, ShoppingBag, ArrowLeft, Star, ShieldCheck, Wind, CheckCircle2, ChevronRight, Settings2, Shield, HeartPulse, BrainCircuit } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useAppContext } from '../store/AppContext';

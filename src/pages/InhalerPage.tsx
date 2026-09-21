@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+﻿import React, { useState, useMemo, useEffect } from "react";
 import {
   Wind,
   HelpCircle,
@@ -238,106 +238,107 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50/50 pt-8 px-5 pb-24 overflow-y-auto w-full">
+    <div className="wellness-page flex flex-col h-full pt-8 px-5 pb-28 overflow-y-auto w-full">
       <header className="mb-6 flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            {t.inhaler.title} <Wind className="w-5 h-5 text-gray-500" />
+          <h1 className="text-2xl font-display font-bold flex items-center gap-2" style={{ color: '#4A3F35' }}>
+            {t.inhaler.title} <Wind className="w-5 h-5" style={{ color: '#5B9BD5' }} />
           </h1>
-          <p className="text-gray-500 font-medium">
+          <p className="font-semibold" style={{ color: '#8A7A6B' }}>
             {t.inhaler.subtitle}
           </p>
         </div>
         <button
           onClick={() => setShowLogModal(true)}
-          className="btn-primary !py-2 !px-4 shadow-brand/20"
+          className="btn-primary !py-2 !px-4"
         >
           {t.inhaler.logSession}
         </button>
       </header>
 
       {logs.length < 5 && (
-        <div className="bg-brand-50 border border-brand-100 p-4 rounded-2xl mb-6 shadow-sm">
-          <h3 className="font-bold text-brand-700 flex items-center gap-1">
+        <div className="p-4 rounded-3xl mb-6 glass-card" style={{ background: 'linear-gradient(180deg,#F2FBF5,#E7F6EE)' }}>
+          <h3 className="font-bold flex items-center gap-1" style={{ color: '#1C7D5B' }}>
             <Zap className="w-4 h-4" /> {t.inhaler.aiCalibration}
           </h3>
-          <p className="text-sm font-medium text-brand-600 mt-1">
+          <p className="text-sm font-semibold mt-1" style={{ color: '#4A3F35' }}>
             {t.inhaler.aiCalibrationDesc}
           </p>
         </div>
       )}
 
       {logs.length >= 5 && bestVariantForTopContext && (
-        <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-3 shadow-2xl shadow-gray-900/20 mb-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-brand/20 blur-3xl rounded-full"></div>
-          <div className="flex items-center gap-2 text-brand-300 font-bold text-[10px] tracking-widest mb-3">
+        <div className="rounded-3xl p-4 mb-6 relative overflow-hidden" style={{ background: 'linear-gradient(135deg,#3A5A4C,#2A4A3E)', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 14px 30px rgba(46,68,59,0.25)' }}>
+          <div className="absolute top-0 right-0 w-32 h-32 rounded-full" style={{ background: 'rgba(76,195,154,0.25)', filter: 'blur(28px)' }}></div>
+          <div className="flex items-center gap-2 font-bold text-[10px] tracking-[0.18em] mb-3 relative z-10" style={{ color: '#8FE3BC' }}>
             <BrainCircuit className="w-4 h-4" /> {t.inhaler.aiRecommendation}
           </div>
-          <h3 className="text-white font-bold text-lg mb-2">
-            For <span className="text-brand-400">"{topContextName}"</span> cravings, {bestVariantForTopContext.name} has proven to be the most effective.
+          <h3 className="text-white font-bold text-lg mb-2 relative z-10">
+            For <span style={{ color: '#FFD964' }}>"{topContextName}"</span> cravings, {bestVariantForTopContext.name} has proven to be the most effective.
           </h3>
-          <p className="text-gray-400 text-sm font-medium">
+          <p className="text-sm font-medium relative z-10" style={{ color: 'rgba(255,255,255,0.75)' }}>
             Keep this variant ready before that situation arises again.
           </p>
         </div>
       )}
 
       {weeklyInsight && (
-        <div className="bg-brand-50 border-2 border-brand-100 rounded-3xl p-3 mb-8 shadow-sm">
+        <div className="rounded-3xl p-4 mb-8 glass-card" style={{ background: 'linear-gradient(180deg,#F4FAFF,#E3F0FB)' }}>
           <div className="flex items-center gap-2 mb-4">
-            <div className="bg-brand text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-white text-sm" style={{ background: 'linear-gradient(135deg,#3FA9E8,#7CC8F5)' }}>
               W
             </div>
             <div>
-              <h3 className="font-bold text-brand-900 leading-tight">
+              <h3 className="font-display font-bold leading-tight" style={{ color: '#2E5E8C' }}>
                 {t.inhaler.weeklyInsight}
               </h3>
-              <p className="text-[10px] font-bold text-brand-500 tracking-wider mt-0.5">
+              <p className="text-[10px] font-bold tracking-wider mt-0.5" style={{ color: '#5B9BD5' }}>
                 {t.inhaler.weeklySummary}
               </p>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-2 mb-4">
-            <div className="bg-white rounded-xl p-3 text-center">
-              <span className="block text-2xl font-bold text-gray-800">
+            <div className="bg-white/90 rounded-2xl p-3 text-center" style={{ border: '1px solid rgba(74,63,53,0.06)' }}>
+              <span className="block text-2xl font-bold" style={{ color: '#4A3F35' }}>
                 {weeklyInsight.total}
               </span>
-              <span className="text-[10px] font-bold text-gray-400">
+              <span className="text-[10px] font-bold" style={{ color: '#B8A99A' }}>
                 {t.inhaler.sessions}
               </span>
             </div>
-            <div className="bg-white rounded-xl p-3 text-center">
+            <div className="bg-white/90 rounded-2xl p-3 text-center" style={{ border: '1px solid rgba(74,63,53,0.06)' }}>
               <span
-                className="block text-xl font-bold text-gray-800 truncate px-1"
+                className="block text-xl font-bold truncate px-1"
+                style={{ color: '#4A3F35' }}
                 title={weeklyInsight.topVariant}
               >
                 {weeklyInsight.topVariant.split("-")[0]}
               </span>
-              <span className="text-[10px] font-bold text-gray-400">
+              <span className="text-[10px] font-bold" style={{ color: '#B8A99A' }}>
                 {t.inhaler.topVariant}
               </span>
             </div>
-            <div className="bg-white rounded-xl p-3 text-center">
-              <span className="block text-2xl font-bold text-brand-dark">
+            <div className="bg-white/90 rounded-2xl p-3 text-center" style={{ border: '1px solid rgba(74,63,53,0.06)' }}>
+              <span className="block text-2xl font-bold" style={{ color: '#1C7D5B' }}>
                 -{weeklyInsight.avgReduction}
               </span>
-              <span className="text-[10px] font-bold text-gray-400">
+              <span className="text-[10px] font-bold" style={{ color: '#B8A99A' }}>
                 {t.inhaler.cravingPoints}
               </span>
             </div>
           </div>
 
-          <p className="text-sm font-medium text-brand-800 italic bg-white/50 p-3 rounded-xl">
+          <p className="text-sm font-semibold italic p-3 rounded-2xl bg-white/60" style={{ color: '#2E5E8C' }}>
             "{weeklyInsight.insight}"
           </p>
         </div>
       )}
 
       <section className="mb-8">
-        <h2 className="font-bold text-gray-800 mb-3 flex items-center justify-between">
+        <h2 className="font-display font-bold mb-3 flex items-center justify-between" style={{ color: '#4A3F35' }}>
           {t.inhaler.effectivenessTitle}
-          <span className="text-xs font-bold text-gray-400 tracking-widest">
+          <span className="text-xs font-bold tracking-[0.16em]" style={{ color: '#B8A99A' }}>
             {t.inhaler.scoreboard}
           </span>
         </h2>
@@ -345,32 +346,32 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
           {variantStats.map((v, i) => (
             <div
               key={v.id}
-              className="bg-white text-left flex justify-between items-center p-4 rounded-2xl"
+              className="glass-card text-left flex justify-between items-center p-4"
             >
               <div className="flex items-center gap-3">
                 <div
                   className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-black/5 text-white",
+                    "w-10 h-10 rounded-full flex items-center justify-center text-white",
                     v.color,
                   )}
                 >
                   <Wind className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-800 text-sm">{v.name}</h4>
+                  <h4 className="font-bold text-sm" style={{ color: '#4A3F35' }}>{v.name}</h4>
                   {v.stats.count > 0 ? (
-                    <p className="text-xs font-bold text-brand-dark mt-0.5 tracking-tight flex items-center gap-0.5">
+                    <p className="text-xs font-bold mt-0.5 tracking-tight flex items-center gap-0.5" style={{ color: '#1C7D5B' }}>
                       <CheckCircle2 className="w-3 h-3" /> {t.inhaler.dropsPoints.replace('{n}', v.stats.avgReduction.toFixed(1))}
                     </p>
                   ) : (
-                    <p className="text-xs font-medium text-gray-400 mt-0.5">
+                    <p className="text-xs font-semibold mt-0.5" style={{ color: '#B8A99A' }}>
                       {t.inhaler.notTriedYet}
                     </p>
                   )}
                 </div>
               </div>
               {i === 0 && v.stats.count > 0 && (
-                <div className="bg-brand/10 text-brand px-2 py-1 rounded-md text-[10px] font-extrabold tracking-wide">
+                <div className="px-2 py-1 rounded-full text-[10px] font-bold tracking-wide" style={{ background: '#FFF1C4', color: '#7A4D00', border: '1px solid rgba(185,126,12,0.25)' }}>
                   {t.inhaler.mostEffective}
                 </div>
               )}
@@ -381,20 +382,20 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
 
       {logs.length > 0 && (
         <section className="mb-8 card-duo">
-          <h2 className="font-bold text-gray-800 text-sm mb-4">
+          <h2 className="font-display font-bold text-sm mb-4" style={{ color: '#4A3F35' }}>
             {t.inhaler.topContexts}
           </h2>
           <div className="space-y-3">
             {topContexts.map(([ctx, count], i) => (
               <div key={ctx}>
                 <div className="flex justify-between text-xs font-bold mb-1">
-                  <span className="text-gray-700">{ctx}</span>
-                  <span className="text-gray-400">{count}x</span>
+                  <span style={{ color: '#4A3F35' }}>{ctx}</span>
+                  <span style={{ color: '#B8A99A' }}>{count}x</span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(74,63,53,0.07)' }}>
                   <div
-                    className="h-full bg-gray-800 rounded-full"
-                    style={{ width: `${(count / topContexts[0][1]) * 100}%` }}
+                    className="h-full rounded-full"
+                    style={{ width: `${(count / topContexts[0][1]) * 100}%`, background: 'linear-gradient(90deg,#2AA97E,#4CC39A)' }}
                   ></div>
                 </div>
               </div>
@@ -404,7 +405,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
       )}
 
       <section>
-        <h2 className="font-bold text-gray-800 mb-3 flex items-center justify-between">
+        <h2 className="font-display font-bold mb-3 flex items-center justify-between" style={{ color: '#4A3F35' }}>
           {t.inhaler.sessionHistory}
         </h2>
         <div className="space-y-3">
@@ -418,7 +419,7 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
             return (
               <div
                 key={log.id}
-                className="bg-white p-4 rounded-2xl transition-all hover:border-gray-200"
+                className="glass-card p-4 transition-all"
               >
                 <div
                   className="flex justify-between items-start cursor-pointer"
@@ -429,20 +430,20 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
                       <div
                         className={cn(
                           "w-2 h-2 rounded-full",
-                          v ? v.color : "bg-gray-400",
+                          v ? v.color : "bg-gray-300",
                         )}
                       ></div>
-                      <span className="font-bold text-sm text-gray-800">
+                      <span className="font-bold text-sm" style={{ color: '#4A3F35' }}>
                         {v ? v.name : t.inhaler.inhalerFreeFallback}
                       </span>
-                      <span className="text-[10px] text-gray-400 font-medium">
+                      <span className="text-[10px] font-semibold" style={{ color: '#B8A99A' }}>
                         {new Date(log.timestamp).toLocaleTimeString([], {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500 font-medium">
+                    <p className="text-xs font-semibold" style={{ color: '#8A7A6B' }}>
                       {log.context.join(", ")}
                     </p>
                   </div>
@@ -450,33 +451,35 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
                     {log.intensityAfter !== null ? (
                       <div className="flex flex-col items-end">
                         <div className="flex items-center gap-1.5 font-bold text-xs">
-                          <span className="text-brand">
+                          <span style={{ color: '#1C7D5B' }}>
                             {log.intensityBefore}
                           </span>
-                          <ChevronRight className="w-3 h-3 text-gray-300" />
+                          <ChevronRight className="w-3 h-3" style={{ color: '#D9CBB8' }} />
                           <span
                             className={
                               reduction > 0
-                                ? "text-brand"
-                                : "text-gray-500"
+                                ? ""
+                                : ""
                             }
+                            style={{ color: reduction > 0 ? '#1C7D5B' : '#8A7A6B' }}
                           >
                             {log.intensityAfter}
                           </span>
                         </div>
                       </div>
                     ) : (
-                      <span className="text-xs font-bold text-brand bg-brand-surface px-2 py-0.5 rounded-md">
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: '#E7F6EE', color: '#1C7D5B' }}>
                         {t.inhaler.pending}
                       </span>
                     )}
                   </div>
                 </div>
                 {isExpanded && (
-                  <div className="mt-4 pt-4 border-t border-gray-100 animate-in slide-in-from-top-2 flex justify-between items-center">
+                  <div className="mt-4 pt-4 animate-in slide-in-from-top-2 flex justify-between items-center" style={{ borderTop: '1px solid rgba(74,63,53,0.08)' }}>
                      <button
                        onClick={() => deleteInhalerLog(log.id!)}
-                       className="text-xs font-bold text-brand hover:bg-brand-surface px-2 py-1 rounded-md transition-colors"
+                       className="text-xs font-bold px-2.5 py-1 rounded-full transition-colors cursor-pointer"
+                       style={{ color: '#C2542F', background: '#FFE9DB' }}
                      >
                        {t.inhaler.deleteRecord}
                      </button>
@@ -486,9 +489,9 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
             );
           })}
           {logs.length === 0 && (
-            <div className="text-center p-8 bg-gray-50 border border-dashed border-gray-200 rounded-2xl">
-              <Wind className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-500">
+            <div className="text-center p-8 rounded-3xl" style={{ background: 'rgba(74,63,53,0.03)', border: '1.5px dashed rgba(74,63,53,0.15)' }}>
+              <Wind className="w-8 h-8 mx-auto mb-2" style={{ color: '#D9CBB8' }} />
+              <p className="text-sm font-semibold" style={{ color: '#8A7A6B' }}>
                 {t.inhaler.noSessions}
               </p>
             </div>
@@ -498,15 +501,16 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
 
       {/* Log Modal */}
       {showLogModal && (
-        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 backdrop-blur-sm animate-in fade-in">
-          <div className="w-full max-w-md bg-white rounded-t-3xl shadow-2xl flex flex-col h-[90vh]">
-            <div className="p-3 border-b border-gray-100 flex justify-between items-center shrink-0">
-              <h2 className="font-bold text-xl text-gray-800">
+        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/50 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-md rounded-t-[1.75rem] flex flex-col h-[90vh]" style={{ background: 'linear-gradient(180deg,#FFFDF7,#FFF8EC)', boxShadow: '0 -12px 40px rgba(74,63,53,0.18)' }}>
+            <div className="p-3 flex justify-between items-center shrink-0" style={{ borderBottom: '1px solid rgba(74,63,53,0.07)' }}>
+              <h2 className="font-display font-bold text-xl" style={{ color: '#4A3F35' }}>
                 {t.inhaler.logModalTitle}
               </h2>
               <button
                 onClick={() => setShowLogModal(false)}
-                className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full text-gray-500"
+                className="w-8 h-8 flex items-center justify-center rounded-full"
+                style={{ background: 'rgba(74,63,53,0.06)', color: '#8A7A6B' }}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -589,13 +593,13 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
                     </p>
                     <ul className="text-xs font-bold text-brand-dark space-y-2 mb-4">
                       <li>
-                        • After eating: Drink ice water / chew strong gum.
+                        â€¢ After eating: Drink ice water / chew strong gum.
                       </li>
                       <li>
-                        • Stressed: Wash face with cold water / 4-7-8
+                        â€¢ Stressed: Wash face with cold water / 4-7-8
                         breathing.
                       </li>
-                      <li>• Bored: 2 minutes stretching / quick walk.</li>
+                      <li>â€¢ Bored: 2 minutes stretching / quick walk.</li>
                     </ul>
                     <button
                       onClick={() => setInhalerAvailable(true)}
@@ -693,10 +697,10 @@ export default function InhalerPage({ startLogging, setActiveTab }: { startLoggi
               </div>
             </div>
 
-            <div className="p-3 border-t border-gray-100 bg-white shrink-0">
+            <div className="p-3 shrink-0" style={{ borderTop: '1px solid rgba(74,63,53,0.07)', background: '#FFFDF7' }}>
               <button
                 onClick={saveLog}
-                className="btn-primary w-full shadow-brand/20"
+                className="btn-primary w-full"
               >
                 Save Inhaler Log
               </button>
