@@ -19,7 +19,7 @@ export function ChatPage({ setActiveTab }: { setActiveTab?: (tab: any) => void }
   const [activeTab, setLocalActiveTab] = useState<'chat' | 'missions'>('chat');
 
   return (
-    <div className="wellness-page flex flex-col h-full relative">
+    <div className="wellness-page flex flex-col h-full relative overflow-hidden">
       <header className="px-5 py-4 flex items-center justify-between shrink-0 sticky top-0 z-10" style={{ background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.9)', boxShadow: '0 1px 12px rgba(42,169,126,0.06)' }}>
         <div className="flex items-center gap-3 min-w-0 flex-1">
           {/* Clean circular mascot container — no animation clip */}
@@ -343,8 +343,8 @@ function ChatInterface({ setActiveTab }: { setActiveTab?: (tab: any) => void }) 
    };
 
    return (
-      <div className="flex-1 flex flex-col relative">
-         <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-32">
+      <div className="flex-1 flex flex-col relative overflow-hidden">
+         <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-32" style={{ isolation: 'isolate', background: 'linear-gradient(180deg, rgba(220,242,255,0.45) 0%, rgba(232,248,240,0.30) 40%, rgba(255,255,255,0.0) 100%)' }}>
             {state.messages.length === 0 && (
                <div className="flex flex-col items-center text-center my-6 px-2">
                   <CompanionAvatar mood="happy" size={96} grounded />
