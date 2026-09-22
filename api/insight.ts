@@ -1,4 +1,4 @@
-import { handleInsight, clientIpFrom } from "../lib/ai";
+import { handleInsight, clientIpFrom } from "../lib/ai.js";
 
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
