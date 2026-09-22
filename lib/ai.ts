@@ -1,5 +1,7 @@
 import "dotenv/config";
-import { GoogleGenAI } from "@google/genai";
+// Type-only import: dihapus saat build, jadi lambda gak perlu load SDK Gemini
+// (provider openai cuma butuh fetch bawaan Node).
+import type { GoogleGenAI } from "@google/genai";
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -387,7 +389,8 @@ async function runModel(apiKey: string, system: string, userContent: string, too
     return callOpenAI(apiKey, system, userContent, toolResults);
   }
 
-  const ai = new GoogleGenAI({ apiKey, httpOptions: { timeout: AI_TIMEOUT_MS } });
+  const { GoogleGenAI: GeminiClient } = await import("@google/genai");
+  const ai = new GeminiClient({ apiKey, httpOptions: { timeout: AI_TIMEOUT_MS } });
   const response = await generateWithModelFallback(ai, {
     contents: buildGeminiContents(userContent, toolResults) as any,
     config: {
